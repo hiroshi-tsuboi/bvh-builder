@@ -1,5 +1,6 @@
 #include "tcp-server.h"
 #include <vector>
+#include <iostream>
 #include <memory.h>
 
 #include <sys/types.h>
@@ -122,7 +123,43 @@ void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
 
 			sfds.push_back(sfd);
 
-			if (sz != sizeof(sa6))
+			std::string header;
+			char data[8];
+			size_t leftAmount = 0;
+
+			while (1)
+			{
+				auto r = recv(sfd, data, sizeof(data), 0);
+				if (r < 0)
+				{
+					std::lock_guard<std::mutex> lk(mutex_);
+					errors_.push_back("failed recv(), error = " + std::to_string(errno));
+					break;
+				}
+				if (r == 0)
+				{
+					break;
+				}
+				for (int i = 0; i < r; ++i)
+				{
+					auto c = data[i];
+					if (c == '\0')
+					{
+						++i;
+						if (i < r)
+						{
+							leftAmount = r - i;
+							memmove(&data[0], &data[i], leftAmount);
+						}
+						break;
+					}
+					header.push_back(c);
+				}
+			}
+
+			std::cout << header << std::endl;
+
+			if (header == "shutdown")
 			{
 				break;
 			}
@@ -143,6 +180,8 @@ void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
 				errors_.push_back("failed to create fifo->buffer_.");
 				break;
 			}
+
+			// TODO copy left data
 
 			{
 				auto thread = new std::thread(&TcpServer::main, this, sfd, fifo);

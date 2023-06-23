@@ -8,6 +8,8 @@ struct BvhBuilder : TcpServer::Reader
 void BvhBuilder::main(Fifo* fifo)
 {
 	// TODO
+	//size_t sz;
+	//fifo->read(sz);
 }
 
 

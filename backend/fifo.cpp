@@ -30,6 +30,24 @@ void Fifo::read(std::vector<float>& values)
 	read(values.data(), sizeof(values[0]) * sz);
 }
 
+void Fifo::read(std::vector<std::vector<uint32_t> >& valuesv)
+{
+	uint32_t sz;
+
+	read(&sz, sizeof(sz));
+
+	valuesv.resize(sz);
+
+	for (auto& values: valuesv)
+	{
+		read(&sz, sizeof(sz));
+
+		values.resize(sz);
+
+		read(values.data(), sizeof(values[0]) * sz);
+	}
+}
+
 void Fifo::read(void* ptr, size_t sz)
 {
 	auto dst = static_cast<uint8_t*>(ptr);

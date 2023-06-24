@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 #include <vector>
 #include <mutex>
 #include <condition_variable>
@@ -27,14 +28,10 @@ struct Fifo
 		}
 	} index_;
 
+	void read(std::string& string);
+
 	void read(void* ptr, size_t sz);
 	void write(void* ptr, size_t sz);
-
-	template<typename T>
-	void read(T& x)
-	{
-		read(&x, sizeof(x));
-	}
 
 	bool initialize(size_t sz);
 	void finalize();

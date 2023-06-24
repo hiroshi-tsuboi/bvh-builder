@@ -1,5 +1,24 @@
 #include "fifo.h"
 
+void Fifo::read(std::string& string)
+{
+	string.clear();
+
+	while (1)
+	{
+		char c;
+
+		read(&c, sizeof(c));
+
+		if (c == '\0')
+		{
+			break;
+		}
+
+		string.push_back(c);
+	}
+}
+
 void Fifo::read(void* ptr, size_t sz)
 {
 	auto dst = static_cast<uint8_t*>(ptr);

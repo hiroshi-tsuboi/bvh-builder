@@ -19,6 +19,17 @@ void Fifo::read(std::string& string)
 	}
 }
 
+void Fifo::read(std::vector<float>& values)
+{
+	uint32_t sz;
+
+	read(&sz, sizeof(sz));
+
+	values.resize(sz);
+
+	read(values.data(), sizeof(values[0]) * sz);
+}
+
 void Fifo::read(void* ptr, size_t sz)
 {
 	auto dst = static_cast<uint8_t*>(ptr);

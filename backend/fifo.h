@@ -29,6 +29,7 @@ struct Fifo
 	} index_;
 
 	void read(std::string& string);
+	void read(std::vector<float>& values);
 
 	void read(void* ptr, size_t sz);
 	void write(void* ptr, size_t sz);

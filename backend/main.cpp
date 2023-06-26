@@ -1,5 +1,7 @@
 #include "tcp-server.h"
 
+#include <iostream>
+
 struct BvhBuilder : TcpServer::Reader
 {
 	void main(Fifo* fifo) override;
@@ -7,9 +9,11 @@ struct BvhBuilder : TcpServer::Reader
 
 void BvhBuilder::main(Fifo* fifo)
 {
-	// TODO
-	//size_t sz;
-	//fifo->read(sz);
+	uint32_t meshCount;
+
+	fifo->read(&meshCount, sizeof(meshCount));
+
+	std::cout << "mesh count = " << meshCount << std::endl;
 }
 
 

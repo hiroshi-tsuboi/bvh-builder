@@ -3,6 +3,33 @@ import socket
 import sys
 import struct
 
+###
+
+class Tcp():
+    def __init__(self):
+        self.client6_ = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+
+    def connect(self, address, port):
+        try:
+            self.client6_.connect((address, port))
+        except:
+            pass
+
+    def sendString(self, string):
+        datas = bytearray()
+        datas.extend(map(ord, string))
+        self.client6_.send(datas)
+
+    def sendInt(self, value):
+        datas = struct.pack('<I', value)
+        #print(datas)
+        self.client6_.send(datas)
+
+    def close(self):
+        self.client6_.close()
+
+###
+
 filename = None
 
 for a in sys.argv[1:]:
@@ -11,6 +38,8 @@ for a in sys.argv[1:]:
 
 if filename is None:
     sys.exit(0)
+
+scene = None
 
 try:
     scene = pywavefront.Wavefront(filename, create_materials=True, collect_faces=True)
@@ -38,30 +67,13 @@ except:
     print("failed to load %s" % filename)
     sys.exit(-1)
 
-class Tcp():
-    def __init__(self):
-        self.client6_ = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
-
-    def connect(self, address, port):
-        try:
-            self.client6_.connect((address, port))
-        except:
-            pass
-
-    def sendString(self, string):
-        datas = bytearray()
-        datas.extend(map(ord, string))
-        self.client6_.send(datas)
-
-    def close(self):
-        self.client6_.close()
-
-
 tcp = Tcp()
 
 tcp.connect("::1", 8080)
 
 tcp.sendString(filename)
+
+tcp.sendInt(len(scene.mesh_list))
 
 tcp.close()
 

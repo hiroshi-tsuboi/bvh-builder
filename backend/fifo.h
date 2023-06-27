@@ -32,9 +32,11 @@ struct Fifo
 	void read(std::vector<float>& values);
 	void read(std::vector<std::vector<uint32_t> >& valuesv);
 
-	void read(void* ptr, size_t sz);
+	bool read(void* ptr, size_t sz);
 	void write(void* ptr, size_t sz);
 
 	bool initialize(size_t sz);
 	void finalize();
+
+	void destroy();
 };

@@ -32,6 +32,8 @@ void TcpServer::main(int sfd, Fifo* fifo)
 
 		fifo->write(buffer, r);
 	}
+
+	fifo->destroy();
 }
 
 void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
@@ -123,47 +125,6 @@ void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
 
 			sfds.push_back(sfd);
 
-			std::string header;
-			char data[8];
-			size_t leftAmount = 0;
-
-			while (1)
-			{
-				auto r = recv(sfd, data, sizeof(data), 0);
-				if (r < 0)
-				{
-					std::lock_guard<std::mutex> lk(mutex_);
-					errors_.push_back("failed recv(), error = " + std::to_string(errno));
-					break;
-				}
-				if (r == 0)
-				{
-					break;
-				}
-				for (int i = 0; i < r; ++i)
-				{
-					auto c = data[i];
-					if (c == '\0')
-					{
-						++i;
-						if (i < r)
-						{
-							leftAmount = r - i;
-							memmove(&data[0], &data[i], leftAmount);
-						}
-						break;
-					}
-					header.push_back(c);
-				}
-			}
-
-			std::cout << header << std::endl;
-
-			if (header == "shutdown")
-			{
-				break;
-			}
-
 			auto fifo = new Fifo();
 			if (fifo == nullptr)
 			{
@@ -181,8 +142,6 @@ void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
 				break;
 			}
 
-			// TODO copy left data
-
 			{
 				auto thread = new std::thread(&TcpServer::main, this, sfd, fifo);
 				if (thread == nullptr)
@@ -192,6 +151,16 @@ void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
 					break;
 				}
 				threads.push_back(thread);
+			}
+
+			std::string header;
+
+			fifo->read(header);
+			std::cout << header << std::endl;
+
+			if (header == "shutdown")
+			{
+				break;
 			}
 
 			{

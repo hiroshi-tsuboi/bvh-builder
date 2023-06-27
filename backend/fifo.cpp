@@ -8,7 +8,10 @@ void Fifo::read(std::string& string)
 	{
 		char c;
 
-		read(&c, sizeof(c));
+		if (!read(&c, sizeof(c)))
+		{
+			break;
+		}
 
 		if (c == '\0')
 		{
@@ -48,7 +51,7 @@ void Fifo::read(std::vector<std::vector<uint32_t> >& valuesv)
 	}
 }
 
-void Fifo::read(void* ptr, size_t sz)
+bool Fifo::read(void* ptr, size_t sz)
 {
 	auto dst = static_cast<uint8_t*>(ptr);
 
@@ -59,6 +62,11 @@ void Fifo::read(void* ptr, size_t sz)
 		not_.empty_.wait(lk, [&]{ return index_.amount() != 0; });
 
 		auto n = index_.amount();
+
+		if (buffer_.size() < n)
+		{
+			return false;
+		}
 
 		if (sz < n)
 		{
@@ -74,6 +82,8 @@ void Fifo::read(void* ptr, size_t sz)
 
 		not_.full_.notify_one();
 	}
+
+	return true;
 }
 
 void Fifo::write(void* ptr, size_t sz)
@@ -114,4 +124,13 @@ bool Fifo::initialize(size_t sz)
 void Fifo::finalize()
 {
 	buffer_.clear(); 
+}
+
+void Fifo::destroy()
+{
+	std::unique_lock<std::mutex> lk(mutex_);
+
+	index_.writer_ = index_.reader_ - 1;
+
+	not_.empty_.notify_one();
 }

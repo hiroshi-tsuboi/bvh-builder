@@ -18,6 +18,8 @@ class Tcp():
     def sendString(self, string):
         datas = bytearray()
         datas.extend(map(ord, string))
+        datas.extend([0])
+        print(datas)
         self.client6_.send(datas)
 
     def sendInt(self, value):
@@ -73,6 +75,7 @@ tcp.connect("::1", 8080)
 
 tcp.sendString(filename)
 
+print("mesh count = %d" % len(scene.mesh_list))
 tcp.sendInt(len(scene.mesh_list))
 
 tcp.close()

@@ -130,6 +130,8 @@ void Fifo::destroy()
 {
 	std::unique_lock<std::mutex> lk(mutex_);
 
+	not_.full_.wait(lk, [&]{ return index_.amount() == 0; });
+
 	index_.writer_ = index_.reader_ - 1;
 
 	not_.empty_.notify_one();

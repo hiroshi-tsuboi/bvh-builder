@@ -15,14 +15,22 @@ void BvhBuilder::main(Fifo* fifo)
 
 	std::cout << "mesh count = " << meshCount << std::endl;
 
-	// test
-	float fValue;
+	for (uint32_t meshIndex = 0; meshIndex < meshCount; ++meshIndex)
+	{
+		uint32_t materialCount;
 
-	fifo->read(&fValue, sizeof(fValue));
+		fifo->read(&materialCount, sizeof(materialCount));
 
-	std::cout << "float = " << fValue << std::endl;
+		for (uint32_t materialIndex = 0; materialIndex < materialCount; ++materialIndex)
+		{
+			std::string vertexFormat;
+
+			fifo->read(vertexFormat);
+
+			std::cout << "vertex format = " << vertexFormat << std::endl;
+		}
+	}
 }
-
 
 int main(int argc, char** argv)
 {

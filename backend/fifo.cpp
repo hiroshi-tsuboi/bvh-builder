@@ -61,12 +61,12 @@ bool Fifo::read(void* ptr, size_t sz)
 
 		not_.empty_.wait(lk, [&]{ return index_.amount() != 0; });
 
-		auto n = index_.amount();
-
-		if (buffer_.size() < n)
+		if (broken())
 		{
 			return false;
 		}
+
+		auto n = index_.amount();
 
 		if (sz < n)
 		{

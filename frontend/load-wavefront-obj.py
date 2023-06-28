@@ -31,6 +31,11 @@ class Tcp():
         datas = struct.pack('<f', value)
         self.client6_.send(datas)
 
+    def sendFloatArray(self, values):
+        self.sendInt(len(values))
+        for value in values:
+            self.sendFloat(value)
+
     def close(self):
         self.client6_.close()
 
@@ -79,10 +84,14 @@ tcp.connect("::1", 8080)
 
 tcp.sendString(filename)
 
-#print("mesh count = %d" % len(scene.mesh_list))
-tcp.sendInt(len(scene.mesh_list))
-
-tcp.sendFloat(1.23)
-
+if scene is None:
+    pass
+else:
+    tcp.sendInt(len(scene.mesh_list))
+    for mesh in scene.mesh_list:
+        tcp.sendInt(len(mesh.materials))
+        for material in mesh.materials:
+            tcp.sendString(material.vertex_format)
+ 
 tcp.close()
 

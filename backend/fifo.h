@@ -39,4 +39,9 @@ struct Fifo
 	void finalize();
 
 	void destroy();
+
+	bool broken()
+	{
+		return buffer_.size() < index_.amount();
+	}
 };

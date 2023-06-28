@@ -156,11 +156,17 @@ void TcpServer::run(std::string ipv6Address, int port, Reader* reader)
 			std::string header;
 
 			fifo->read(header);
+
 			std::cout << header << std::endl;
 
 			if (header == "shutdown")
 			{
 				break;
+			}
+
+			if (fifo->broken())
+			{
+				continue;
 			}
 
 			{

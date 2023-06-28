@@ -14,6 +14,13 @@ void BvhBuilder::main(Fifo* fifo)
 	fifo->read(&meshCount, sizeof(meshCount));
 
 	std::cout << "mesh count = " << meshCount << std::endl;
+
+	// test
+	float fValue;
+
+	fifo->read(&fValue, sizeof(fValue));
+
+	std::cout << "float = " << fValue << std::endl;
 }
 
 

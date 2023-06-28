@@ -27,6 +27,10 @@ class Tcp():
         #print(datas)
         self.client6_.send(datas)
 
+    def sendFloat(self, value):
+        datas = struct.pack('<f', value)
+        self.client6_.send(datas)
+
     def close(self):
         self.client6_.close()
 
@@ -77,6 +81,8 @@ tcp.sendString(filename)
 
 #print("mesh count = %d" % len(scene.mesh_list))
 tcp.sendInt(len(scene.mesh_list))
+
+tcp.sendFloat(1.23)
 
 tcp.close()
 

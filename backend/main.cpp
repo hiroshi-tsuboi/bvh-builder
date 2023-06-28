@@ -23,11 +23,17 @@ void BvhBuilder::main(Fifo* fifo)
 
 		for (uint32_t materialIndex = 0; materialIndex < materialCount; ++materialIndex)
 		{
+			std::string name;
+			fifo->read(name);
+			std::cout << "name = " << name << std::endl;
+
 			std::string vertexFormat;
-
 			fifo->read(vertexFormat);
-
 			std::cout << "vertex format = " << vertexFormat << std::endl;
+
+			std::vector<float> vertices;
+			fifo->read(vertices);
+			std::cout << "vertex count = " << vertices.size() << std::endl;
 		}
 	}
 }

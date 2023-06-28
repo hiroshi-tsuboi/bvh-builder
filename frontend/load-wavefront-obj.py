@@ -32,6 +32,7 @@ class Tcp():
         self.client6_.send(datas)
 
     def sendFloatArray(self, values):
+        #print(len(values))
         self.sendInt(len(values))
         for value in values:
             self.sendFloat(value)
@@ -63,8 +64,6 @@ try:
         #print(material.diffuse)
         #print(material.ambient)
         #print(material.__dict__)
-        #print(material.has_faces)
-
 
     for mesh in scene.mesh_list:
         #print(mesh.__dict__)
@@ -91,7 +90,9 @@ else:
     for mesh in scene.mesh_list:
         tcp.sendInt(len(mesh.materials))
         for material in mesh.materials:
+            tcp.sendString(material.name)
             tcp.sendString(material.vertex_format)
- 
+            tcp.sendFloatArray(material.vertices)
+
 tcp.close()
 

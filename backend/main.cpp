@@ -1,4 +1,5 @@
 #include "tcp-server.h"
+#include "mesh.h"
 
 #include <iostream>
 
@@ -9,33 +10,27 @@ struct BvhBuilder : TcpServer::Reader
 
 void BvhBuilder::main(Fifo* fifo)
 {
-	uint32_t meshCount;
+	std::vector<Mesh> meshes;
 
-	fifo->read(&meshCount, sizeof(meshCount));
-
-	std::cout << "mesh count = " << meshCount << std::endl;
-
-	for (uint32_t meshIndex = 0; meshIndex < meshCount; ++meshIndex)
 	{
-		uint32_t materialCount;
+		uint32_t meshCount;
 
-		fifo->read(&materialCount, sizeof(materialCount));
+		fifo->read(&meshCount, sizeof(meshCount));
 
-		for (uint32_t materialIndex = 0; materialIndex < materialCount; ++materialIndex)
+		std::cout << "mesh count = " << meshCount << std::endl;
+
+		meshes.resize(meshCount);
+	}
+
+	for (auto& mesh: meshes)
+	{
+		if (!mesh.load(fifo))
 		{
-			std::string name;
-			fifo->read(name);
-			std::cout << "name = " << name << std::endl;
-
-			std::string vertexFormat;
-			fifo->read(vertexFormat);
-			std::cout << "vertex format = " << vertexFormat << std::endl;
-
-			std::vector<float> vertices;
-			fifo->read(vertices);
-			std::cout << "vertex count = " << vertices.size() << std::endl;
+			return; // error
 		}
 	}
+
+	// TODO
 }
 
 int main(int argc, char** argv)

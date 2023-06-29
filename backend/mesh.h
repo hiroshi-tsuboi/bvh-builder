@@ -20,13 +20,7 @@ struct Mesh
 
 	std::vector<Material> materials_;
 
-	struct Polygon
-	{
-		std::vector<int> indices_; // (vertex, [uv, normal])
-		int materialIndex_ = -1;
-	};
-
-	std::vector<Polygon> polygons_;
+	std::vector<std::vector<uint32_t> > polygons_;
 
 	bool load(Fifo* fifo);
 };

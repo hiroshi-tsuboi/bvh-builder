@@ -26,6 +26,9 @@ bool Mesh::load(Fifo* fifo)
 		// TODO
 	}
 
+	fifo->read(polygons_);
+	std::cout << "polygon count = " << polygons_.size() << std::endl;
+
 	// TODO
 
 	return true;

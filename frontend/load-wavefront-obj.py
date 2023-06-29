@@ -27,6 +27,11 @@ class Tcp():
         #print(datas)
         self.client6_.send(datas)
 
+    def sendIntArray(self, values):
+        self.sendInt(len(values))
+        for value in values:
+            self.sendInt(value)
+
     def sendFloat(self, value):
         datas = struct.pack('<f', value)
         self.client6_.send(datas)
@@ -93,6 +98,10 @@ else:
             tcp.sendString(material.name)
             tcp.sendString(material.vertex_format)
             tcp.sendFloatArray(material.vertices)
+
+        tcp.sendInt(len(mesh.faces))
+        for indices in mesh.faces:
+            tcp.sendIntArray(indices)
 
 tcp.close()
 

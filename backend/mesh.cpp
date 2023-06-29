@@ -29,6 +29,23 @@ bool Mesh::load(Fifo* fifo)
 	fifo->read(polygons_);
 	std::cout << "polygon count = " << polygons_.size() << std::endl;
 
+#if 0
+	if (polygons_.size())
+	{
+		uint32_t miniIndex = polygons_.at(0).at(0);
+		uint32_t maxiIndex = polygons_.at(0).at(0);
+		for (auto& polygon: polygons_)
+		{
+			for (auto index: polygon)
+			{
+				if (index < miniIndex) miniIndex = index;
+				if (index > maxiIndex) maxiIndex = index;
+			}
+		}
+		std::cout << "mini-index = " << miniIndex << " maxi-index = " << maxiIndex << std::endl;
+	}
+#endif
+
 	// TODO
 
 	return true;

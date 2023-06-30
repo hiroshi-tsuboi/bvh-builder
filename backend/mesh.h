@@ -16,6 +16,19 @@ struct Mesh
 		float specular_[3];
 		//
 		std::vector<float> vertices_;
+
+		int vertexCount_;
+		int vertexStride()
+		{
+			return vertices_.size() / vertexCount_;
+		}
+
+		struct
+		{
+			int uv_ = -1;
+			int normal_ = -1;
+			int vertex_ = -1;
+		} offset_;
 	};
 
 	std::vector<Material> materials_;

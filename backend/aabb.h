@@ -12,9 +12,9 @@ struct AaBb
 
 	void grow(float vertex[3]);
 	float area() const;
-	float center(uint32_t axis) const
+	float center(uint32_t axisIndex) const
 	{
-		return (mini_[axis] + maxi_[axis]) * 0.5;
+		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}
 
 	void create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex);

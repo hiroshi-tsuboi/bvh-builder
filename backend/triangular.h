@@ -5,8 +5,8 @@
 
 struct Triangular
 {
-	std::vector<float> vertices_;
-	std::vector<uint32_t> indices_;
+	std::vector<float> vertices_; // vertex = (x,y,z)
+	std::vector<uint32_t> indices_; // triangle = (vertex-index0,vertex-index1,vertex-index2,polygon-index)
 
 	bool create(std::vector<float>& vertices, uint32_t vertexOffset, uint32_t vertexStride, std::vector<std::vector<uint32_t> >& polygons);
 };

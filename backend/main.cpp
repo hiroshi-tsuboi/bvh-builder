@@ -1,5 +1,6 @@
 #include "tcp-server.h"
 #include "mesh.h"
+#include "triangular.h"
 
 #include <iostream>
 
@@ -22,11 +23,30 @@ void BvhBuilder::main(Fifo* fifo)
 		meshes.resize(meshCount);
 	}
 
+	std::vector<Triangular> triangulars;
+	triangulars.reserve(meshes.size());
+
 	for (auto& mesh: meshes)
 	{
 		if (!mesh.load(fifo))
 		{
 			return; // error
+		}
+
+		if (mesh.materials_.size())
+		{
+			triangulars.resize(triangulars.size() + 1);
+			auto& triangular = triangulars.back();
+
+			auto& material = mesh.materials_.at(0);
+			if (triangular.create(material.vertices_, material.offset_.vertex_, material.vertexStride(), mesh.polygons_))
+			{
+				std::cout << "triangular:  vertex-count: " << material.vertexCount_ << " -> " << triangular.vertices_.size() / 3 << std::endl;
+			}
+			else
+			{
+				// error		
+			}
 		}
 	}
 

@@ -7,11 +7,21 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 {
 	std::map<std::tuple<float, float, float>, uint32_t> vertexMap;
 
+	{
+		size_t triangleCount = 0;
+		for (auto& indices: polygons)
+		{
+			triangleCount += indices.size() - 2;
+		}
+		indices_.reserve(triangleCount * 4);
+	}
+
+	uint32_t polygonIndex = 0;
 	for (auto& indices: polygons)
 	{
 		auto indexSize = indices.size();
 		for (size_t baseIndex = 0; (baseIndex + 2) < indexSize; ++baseIndex)
-		{ // [0,1,2], [0,2,3], [0,3,4], [0,4,5], ...
+		{ // (0,1,2), (0,2,3), (0,3,4), (0,4,5) ...
 			for (uint32_t i = 0; i < 3; ++i)
 			{
 				auto index = indices.at(0 == i ? 0 : (baseIndex + i));
@@ -30,7 +40,9 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 
 				indices_.push_back(vertexMap.at(vertex));
 			}
+			indices_.push_back(polygonIndex);
 		}
+		++polygonIndex;
 	}
 
 	vertices_.resize(vertexMap.size() * 3);

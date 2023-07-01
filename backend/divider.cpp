@@ -1,20 +1,21 @@
 #include "divider.h"
 
-#include <utility>
+#include <tuple>
 #include <algorithm>
 
 void Divider::process(std::vector<AaBb>& aabbs, uint32_t axisIndex)
 {
-	std::vector<std::pair<float, uint32_t> > centers;
+	std::vector<std::tuple<float, float, uint32_t> > items;
 
-	centers.reserve(aabbs.size());
+	items.reserve(aabbs.size());
 
 	for (uint32_t i = 0; i < aabbs.size(); ++i)
 	{
-		centers.push_back(std::make_pair(aabbs.at(i).center(axisIndex), i));
+		auto& aabb = aabbs.at(i);
+		items.push_back(std::make_tuple(aabb.center(axisIndex), 1.f / aabb.halfArea(), i));
 	}
 
-	std::sort(centers.begin(), centers.end());
+	std::sort(items.begin(), items.end());
 
 	// TODO
 }

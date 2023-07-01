@@ -33,25 +33,31 @@ float AaBb::area()
 	return area_;
 }
 
-bool AaBb::create(std::vector<float>& vertices, std::vector<uint32_t>& triangles)
+void AaBb::create(std::vector<float>& vertices, std::vector<uint32_t>& triangles, uint32_t triangleIndex)
 {
-	for (size_t triangleBaseIndex = 0; triangleBaseIndex < triangles.size(); triangleBaseIndex += 4)
+	auto triangleBaseIndex = triangleIndex * 4;
+	
+	for (uint32_t i = 0; i < 3; ++i)
 	{
-		for (uint32_t i = 0; i < 3; ++i)
+		float vertex[3];
+
+		auto vertexBaseIndex = triangles.at(triangleBaseIndex + i) * 3;
+
+		for (uint32_t j = 0; j < 3; ++j)
 		{
-			float vertex[3];
-
-			auto vertexBaseIndex = triangles.at(triangleBaseIndex + i) * 3;
-
-			for (uint32_t j = 0; j < 3; ++j)
-			{
-				vertex[j] = vertices.at(vertexBaseIndex + j);
-			}
-
-			grow(vertex);
+			vertex[j] = vertices.at(vertexBaseIndex + j);
 		}
-	}
 
-	return true;
+		grow(vertex);
+	}
+}
+
+void AaBb::merge(AaBb& aabb0, AaBb& aabb1)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		mini_[i] = fmin(aabb0.mini_[i], aabb1.mini_[i]);
+		maxi_[i] = fmax(aabb0.maxi_[i], aabb1.maxi_[i]);
+	}
 }
 

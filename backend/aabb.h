@@ -10,8 +10,6 @@ struct AaBb
 	float mini_[3] = {FLT_MAX, FLT_MAX, FLT_MAX};
 	float maxi_[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
 
-	float area_ = 0;
-
 	void grow(float vertex[3]);
 	float area();
 

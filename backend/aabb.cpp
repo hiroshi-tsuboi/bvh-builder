@@ -13,24 +13,21 @@ void AaBb::grow(float vertex[3])
 
 float AaBb::area()
 {
-	if (0.f < area_)
-	{
-		return area_;
-	}
+	float area = 0.f;
 	
 	float len_i_1 = maxi_[2] - mini_[2];
 	for (int i = 0; i < 3; ++i)
 	{
 		float len_i = maxi_[i] - mini_[i];
 
-		area_ += len_i * len_i_1;
+		area += len_i * len_i_1;
 
 		len_i_1 = len_i;
 	}
 
-	area_ *= 2.f;
+	area *= 2.f;
 
-	return area_;
+	return area;
 }
 
 void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex)

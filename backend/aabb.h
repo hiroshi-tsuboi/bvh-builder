@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+
+#include <cstdint>
 #include <cfloat>
 
 struct AaBb
@@ -9,6 +12,8 @@ struct AaBb
 
 	float area_ = 0;
 
-	void grow(float point[3]);
+	void grow(float vertex[3]);
 	float area();
+
+	bool create(std::vector<float>& vertices, std::vector<uint32_t>& triangles);
 };

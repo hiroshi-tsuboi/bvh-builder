@@ -2,12 +2,12 @@
 
 #include <cmath>
 
-void AaBb::grow(float point[3])
+void AaBb::grow(float vertex[3])
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		mini_[i] = fmin(mini_[i], point[i]);
-		maxi_[i] = fmax(maxi_[i], point[i]);
+		mini_[i] = fmin(mini_[i], vertex[i]);
+		maxi_[i] = fmax(maxi_[i], vertex[i]);
 	}
 }
 
@@ -32,3 +32,26 @@ float AaBb::area()
 
 	return area_;
 }
+
+bool AaBb::create(std::vector<float>& vertices, std::vector<uint32_t>& triangles)
+{
+	for (size_t triangleBaseIndex = 0; triangleBaseIndex < triangles.size(); triangleBaseIndex += 4)
+	{
+		for (uint32_t i = 0; i < 3; ++i)
+		{
+			float vertex[3];
+
+			auto vertexBaseIndex = triangles.at(triangleBaseIndex + i) * 3;
+
+			for (uint32_t j = 0; j < 3; ++j)
+			{
+				vertex[j] = vertices.at(vertexBaseIndex + j);
+			}
+
+			grow(vertex);
+		}
+	}
+
+	return true;
+}
+

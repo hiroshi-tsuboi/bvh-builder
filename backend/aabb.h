@@ -15,7 +15,7 @@ struct AaBb
 	void grow(float vertex[3]);
 	float area();
 
-	void create(std::vector<float>& vertices, std::vector<uint32_t>& triangles, uint32_t triangleIndex);
+	void create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex);
 
-	void merge(AaBb& aabb0, AaBb& aabb1);
+	void merge(const AaBb& aabb0, const AaBb& aabb1);
 };

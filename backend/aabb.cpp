@@ -2,6 +2,15 @@
 
 #include <cmath>
 
+void AaBb::grow(const AaBb& aabb)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		mini_[i] = fmin(mini_[i], aabb.mini_[i]);
+		maxi_[i] = fmax(maxi_[i], aabb.maxi_[i]);
+	}
+}
+
 void AaBb::grow(float vertex[3])
 {
 	for (int i = 0; i < 3; ++i)
@@ -38,13 +47,3 @@ void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t
 		grow(vertex);
 	}
 }
-
-void AaBb::merge(const AaBb& aabb0, const AaBb& aabb1)
-{
-	for (int i = 0; i < 3; ++i)
-	{
-		mini_[i] = fmin(aabb0.mini_[i], aabb1.mini_[i]);
-		maxi_[i] = fmax(aabb0.maxi_[i], aabb1.maxi_[i]);
-	}
-}
-

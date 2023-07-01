@@ -10,6 +10,7 @@ struct AaBb
 	float mini_[3] = {FLT_MAX, FLT_MAX, FLT_MAX};
 	float maxi_[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
 
+	void grow(const AaBb& aabb);
 	void grow(float vertex[3]);
 	float halfArea() const;
 	float center(uint32_t axisIndex) const
@@ -18,6 +19,4 @@ struct AaBb
 	}
 
 	void create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex);
-
-	void merge(const AaBb& aabb0, const AaBb& aabb1);
 };

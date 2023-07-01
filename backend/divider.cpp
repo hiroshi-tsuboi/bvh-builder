@@ -17,5 +17,24 @@ void Divider::process(std::vector<AaBb>& aabbs, uint32_t axisIndex)
 
 	std::sort(items.begin(), items.end());
 
+	std::vector<float> leftHalfAreas, rightHalfAreas;
+
+	leftHalfAreas.reserve(aabbs.size() + 1);
+	rightHalfAreas.reserve(aabbs.size() + 1);
+
+	leftHalfAreas.push_back(0.f);
+	rightHalfAreas.push_back(0.f);
+
+	AaBb left, right;
+
+	for (uint32_t i = 0; i < aabbs.size(); ++i)
+	{
+		left.grow(aabbs.at(i));
+		right.grow(aabbs.at(aabbs.size() - 1 - i));
+
+		leftHalfAreas.push_back(left.halfArea());
+		rightHalfAreas.push_back(right.halfArea());
+	}
+
 	// TODO
 }

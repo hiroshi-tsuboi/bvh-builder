@@ -11,7 +11,7 @@ struct AaBb
 	float maxi_[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
 
 	void grow(float vertex[3]);
-	float area() const;
+	float halfArea() const;
 	float center(uint32_t axisIndex) const
 	{
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;

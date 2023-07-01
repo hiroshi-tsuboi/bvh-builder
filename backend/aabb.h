@@ -11,7 +11,7 @@ struct AaBb
 	float maxi_[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
 
 	void grow(float vertex[3]);
-	float area();
+	float area() const;
 
 	void create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex);
 

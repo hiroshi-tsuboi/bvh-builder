@@ -11,23 +11,15 @@ void AaBb::grow(float vertex[3])
 	}
 }
 
-float AaBb::area()
+float AaBb::area() const
 {
-	float area = 0.f;
-	
-	float len_i_1 = maxi_[2] - mini_[2];
-	for (int i = 0; i < 3; ++i)
-	{
-		float len_i = maxi_[i] - mini_[i];
+	auto ex = maxi_[0] - mini_[0];
+	auto ey = maxi_[1] - mini_[1];
+	auto ez = maxi_[2] - mini_[2];
 
-		area += len_i * len_i_1;
+	auto halfArea = ex * ey + ey * ez + ez * ex;
 
-		len_i_1 = len_i;
-	}
-
-	area *= 2.f;
-
-	return area;
+	return halfArea + halfArea;
 }
 
 void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex)

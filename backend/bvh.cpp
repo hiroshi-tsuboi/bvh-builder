@@ -39,27 +39,25 @@ bool Bvh::build(const Triangular& triangular)
 		}
 	}
 
-	for (auto& divider: dividers)
-	{
-		if (divider.leftCount_ == 0)
-		{
-			// TODO
-			return true;
-		}
-	}
-
 	float miniCost = FLT_MAX;
-	uint32_t miniAxisIndex = 0;
+	int64_t miniAxisIndex = -1;
 	for (auto& divider: dividers)
 	{
 		if (divider.miniCost_ < miniCost)
 		{
-			miniCost = divider.miniCost_;
 			miniAxisIndex = divider.axisIndex_;
+			miniCost = divider.miniCost_;
 		}
 	}
 
-	// TODO
+	if (miniAxisIndex < 0 || dividers.at(miniAxisIndex).leftCount_ == 0)
+	{
+		// TODO create leaf
+	}
+	else
+	{
+		// TODO divied aabb to create node
+	}
 
 	return true;
 }

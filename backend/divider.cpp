@@ -90,5 +90,13 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_p
 		}
 	}
 
-	// TODO
+	for (auto cost: result.miniCosts_)
+	{
+		if (cost < miniCost)
+		{
+			return;
+		}
+	}
+
+	// TODO divide & fork
 }

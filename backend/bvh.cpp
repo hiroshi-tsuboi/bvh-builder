@@ -5,6 +5,18 @@
 #include "aabb.h"
 #include "divider.h"
 
+
+
+void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
+{
+	// TODO
+}
+
+void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
+{
+	// TODO
+}
+
 bool Bvh::build(const Triangular& triangular)
 {
 	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();
@@ -62,3 +74,7 @@ bool Bvh::build(const Triangular& triangular)
 	return true;
 }
 
+void Bvh::join()
+{
+	// TODO
+}

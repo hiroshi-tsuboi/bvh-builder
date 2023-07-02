@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
+void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axisIndex)
 {
 	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
@@ -18,7 +18,7 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 		for (uint32_t i = 0; i < aabbs.size(); ++i)
 		{
 			auto& aabb = aabbs.at(i);
-			items.push_back(std::make_tuple(aabb.center(axisIndex_), 1.f / aabb.halfArea(), i));
+			items.push_back(std::make_tuple(aabb.center(axisIndex), 1.f / aabb.halfArea(), i));
 		}
 
 		std::sort(items.begin(), items.end());

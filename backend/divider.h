@@ -1,13 +1,15 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
+
 #include "aabb.h"
 
 struct Divider
 {
 	AaBb sandbox_;
 
-	uint32_t axisIndex_;
+	std::mutex mutex_;
 
 	struct
 	{
@@ -19,5 +21,5 @@ struct Divider
 	uint32_t leftCount_ = 0;
 	std::vector<uint32_t> sortedAabbIndices_;
 
-	void run(std::shared_ptr<std::vector<AaBb> > sharedAabbs);
+	void run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axisIndex);
 };

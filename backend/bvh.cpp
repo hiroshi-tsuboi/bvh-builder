@@ -21,12 +21,11 @@ bool Bvh::build(const Triangular& triangular)
 	std::vector<Divider> dividers(3);
 	std::vector<std::thread*> threads;
 	threads.reserve(dividers.size());
-	uint32_t axisIndex = 0;
 
+	uint32_t axisIndex = 0;
 	for (auto& divider: dividers)
 	{
-		divider.axisIndex_ = axisIndex++;
-		auto thread = new std::thread(&Divider::run, &divider, sharedAabbs);
+		auto thread = new std::thread(&Divider::run, &divider, sharedAabbs, axisIndex++);
 		threads.push_back(thread);
 	}
 
@@ -38,7 +37,7 @@ bool Bvh::build(const Triangular& triangular)
 			delete thread;
 		}
 	}
-
+#if 0
 	float miniCost = FLT_MAX;
 	int64_t miniAxisIndex = -1;
 	for (auto& divider: dividers)
@@ -58,7 +57,7 @@ bool Bvh::build(const Triangular& triangular)
 	{
 		// TODO divied aabb to create node
 	}
-
+#endif
 	return true;
 }
 

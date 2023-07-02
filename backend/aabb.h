@@ -10,7 +10,7 @@ struct AaBb
 	float mini_[3] = {FLT_MAX, FLT_MAX, FLT_MAX};
 	float maxi_[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
 
-	uint32_t ownerIndex_;
+	int64_t ownerIndex_ = -1;
 
 	void grow(const AaBb& aabb);
 	void grow(float vertex[3]);

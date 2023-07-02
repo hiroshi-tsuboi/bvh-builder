@@ -5,21 +5,30 @@
 
 #include <cassert>
 
-void Divider::process(std::vector<AaBb>& aabbs, uint32_t axisIndex)
+void Divider::process(const std::vector<AaBb>& aabbs, uint32_t axisIndex)
 {
 	assert(1 < aabbs.size());
 
-	std::vector<std::tuple<float, float, uint32_t> > items;
+	{ // sort aabbs
+		std::vector<std::tuple<float, float, uint32_t> > items;
 
-	items.reserve(aabbs.size());
+		items.reserve(aabbs.size());
 
-	for (uint32_t i = 0; i < aabbs.size(); ++i)
-	{
-		auto& aabb = aabbs.at(i);
-		items.push_back(std::make_tuple(aabb.center(axisIndex), 1.f / aabb.halfArea(), i));
+		for (uint32_t i = 0; i < aabbs.size(); ++i)
+		{
+			auto& aabb = aabbs.at(i);
+			items.push_back(std::make_tuple(aabb.center(axisIndex), 1.f / aabb.halfArea(), i));
+		}
+
+		std::sort(items.begin(), items.end());
+
+		sortedAabbIndices_.reserve(aabbs.size());
+
+		for (auto& item: items)
+		{
+			sortedAabbIndices_.push_back(std::get<2>(item));
+		}
 	}
-
-	std::sort(items.begin(), items.end());
 
 	std::vector<float> leftHalfAreas, rightHalfAreas;
 
@@ -30,8 +39,11 @@ void Divider::process(std::vector<AaBb>& aabbs, uint32_t axisIndex)
 
 	for (uint32_t i = 1; i < aabbs.size(); ++i)
 	{
-		left.grow(aabbs.at(i - 1));
-		right.grow(aabbs.at(aabbs.size() - i));
+		auto leftIndex = sortedAabbIndices_.at(i - 1);
+		auto rightIndex = sortedAabbIndices_.at(aabbs.size() - i);
+
+		left.grow(aabbs.at(leftIndex));
+		right.grow(aabbs.at(rightIndex));
 		leftHalfAreas.push_back(left.halfArea());
 		rightHalfAreas.push_back(right.halfArea());
 	}

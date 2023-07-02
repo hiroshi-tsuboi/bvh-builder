@@ -11,7 +11,7 @@ struct Divider
 	} sah_;
 
 	uint32_t leftCount_ = 0;
-	std::vector<uint32_t> aabbIndices_;
+	std::vector<uint32_t> sortedAabbIndices_;
 
-	void process(std::vector<AaBb>& aabbs, uint32_t axisIndex);
+	void process(const std::vector<AaBb>& aabbs, uint32_t axisIndex);
 };

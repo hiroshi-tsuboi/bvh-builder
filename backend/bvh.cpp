@@ -31,10 +31,9 @@ bool Bvh::build(const Triangular& triangular)
 		aabbs.at(triangleIndex).create(triangular.vertices_, triangular.indices_, triangleIndex);
 	}
 
-	AaBb sandbox;
 	for (auto& aabb: aabbs)
 	{
-		sandbox.grow(aabb);
+		root_.aabb_.grow(aabb);
 	}
 
 	std::vector<Divider> dividers(3);

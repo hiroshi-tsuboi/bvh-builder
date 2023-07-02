@@ -18,13 +18,11 @@ struct Divider
 		float miniCosts_[3];
 	};
 
-	struct
+	const struct
 	{
-		const float kTriangle_ = 1.f;
-		const float kAabb_ = 1.f * 2;
+		float kTriangle_ = 1.f;
+		float kAabb_ = 1.f * 2;
 	} sah_;
-
-	std::vector<uint32_t> sortedAabbIndices_;
 
 	void run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex);
 };

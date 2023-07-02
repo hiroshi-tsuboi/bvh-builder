@@ -42,6 +42,8 @@ struct Bvh
 		void create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh) override;
 	};
 
+	Node root_;
+
 	std::vector<Obj*> objs_;
 
 	bool build(const Triangular& triangular);

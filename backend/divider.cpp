@@ -70,7 +70,7 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_p
 		}
 	}
 
-	// TODO
+	// wait for threads
 
 	auto& result = *sharedResult.get();
 	{

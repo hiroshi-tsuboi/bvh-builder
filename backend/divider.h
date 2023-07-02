@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "aabb.h"
 
 struct Divider
@@ -18,5 +19,5 @@ struct Divider
 	uint32_t leftCount_ = 0;
 	std::vector<uint32_t> sortedAabbIndices_;
 
-	void process(const std::vector<AaBb>& aabbs);
+	void run(std::shared_ptr<std::vector<AaBb> > sharedAabbs);
 };

@@ -5,8 +5,9 @@
 
 #include <cassert>
 
-void Divider::process(const std::vector<AaBb>& aabbs)
+void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 {
+	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
 
 	{ // sort aabbs

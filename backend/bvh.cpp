@@ -1,4 +1,5 @@
 #include <thread>
+#include <memory>
 
 #include "bvh.h"
 #include "aabb.h"
@@ -6,7 +7,9 @@
 
 bool Bvh::build(const Triangular& triangular)
 {
-	std::vector<AaBb> aabbs;
+	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();
+
+	auto& aabbs = *sharedAabbs.get();
 
 	aabbs.resize(triangular.indices_.size() / 4);
 
@@ -23,7 +26,7 @@ bool Bvh::build(const Triangular& triangular)
 	for (auto& divider: dividers)
 	{
 		divider.axisIndex_ = axisIndex++;
-		auto thread = new std::thread(&Divider::process, &divider, aabbs);
+		auto thread = new std::thread(&Divider::run, &divider, sharedAabbs);
 		threads.push_back(thread);
 	}
 

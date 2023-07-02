@@ -8,6 +8,7 @@
 bool Bvh::build(const Triangular& triangular)
 {
 	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();
+	auto sharedResult = std::make_shared<Divider::Result>();
 
 	auto& aabbs = *sharedAabbs.get();
 
@@ -25,7 +26,7 @@ bool Bvh::build(const Triangular& triangular)
 	uint32_t axisIndex = 0;
 	for (auto& divider: dividers)
 	{
-		auto thread = new std::thread(&Divider::run, &divider, sharedAabbs, axisIndex++);
+		auto thread = new std::thread(&Divider::run, &divider, sharedAabbs, sharedResult, axisIndex++);
 		threads.push_back(thread);
 	}
 

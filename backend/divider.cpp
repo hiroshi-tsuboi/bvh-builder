@@ -5,10 +5,12 @@
 
 #include <cassert>
 
-void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axisIndex)
+void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex)
 {
 	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
+
+	std::vector<uint32_t> sortedAabbIndices;
 
 	{ // sort aabbs
 		std::vector<std::tuple<float, float, uint32_t> > items;
@@ -23,11 +25,11 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axis
 
 		std::sort(items.begin(), items.end());
 
-		sortedAabbIndices_.reserve(aabbs.size());
+		sortedAabbIndices.reserve(aabbs.size());
 
 		for (auto& item: items)
 		{
-			sortedAabbIndices_.push_back(std::get<2>(item));
+			sortedAabbIndices.push_back(std::get<2>(item));
 		}
 	}
 
@@ -40,8 +42,8 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axis
 
 	for (uint32_t i = 1; i < aabbs.size(); ++i)
 	{
-		auto leftIndex = sortedAabbIndices_.at(i - 1);
-		auto rightIndex = sortedAabbIndices_.at(aabbs.size() - i);
+		auto leftIndex = sortedAabbIndices.at(i - 1);
+		auto rightIndex = sortedAabbIndices.at(aabbs.size() - i);
 
 		left.grow(aabbs.at(leftIndex));
 		right.grow(aabbs.at(rightIndex));
@@ -52,7 +54,8 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axis
 	left.grow(aabbs.at(aabbs.size() - 1));
 	const auto baseHalfArea = left.halfArea();
 
-	miniCost_ = sah_.kTriangle_ * aabbs.size();
+	uint32_t leftCount = 0;
+	auto miniCost = sah_.kTriangle_ * aabbs.size();
 
 	for (uint32_t i = 1; i < aabbs.size(); ++i)
 	{
@@ -60,27 +63,30 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axis
 		auto rightTriangleCount = aabbs.size() - leftTriangleCount;
 
 		auto cost = sah_.kAabb_ + (leftHalfAreas.at(i - 1) * leftTriangleCount + rightHalfAreas.at(aabbs.size() - i) * rightTriangleCount) * sah_.kTriangle_ / baseHalfArea;
-		if (cost < miniCost_)
+		if (cost < miniCost)
 		{
-			miniCost_ = cost;
-			leftCount_ = i;
+			miniCost = cost;
+			leftCount = i;
 		}
 	}
 
 	// TODO
 
+	auto& result = *sharedResult.get();
 	{
-		std::unique_lock<std::mutex> lk(mutex_);
+		std::unique_lock<std::mutex> lk(result.mutex_);
 
-		++finishCount_;
+		result.miniCosts_[axisIndex] = miniCost;
 
-		if (3 == finishCount_)
+		++result.finishCount_;
+
+		if (3 == result.finishCount_)
 		{
-			notFull_.notify_all();
+			result.notFull_.notify_all();
 		}
 		else
 		{
-			notFull_.wait(lk, [&]{ return finishCount_ == 3; });
+			result.notFull_.wait(lk, [&]{ return result.finishCount_ == 3; });
 		}
 	}
 

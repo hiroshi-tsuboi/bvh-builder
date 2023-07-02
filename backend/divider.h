@@ -10,20 +10,21 @@ struct Divider
 {
 	AaBb sandbox_;
 
-	std::mutex mutex_;
-	std::condition_variable notFull_;
-
-	uint32_t finishCount_ = 0;
+	struct Result
+	{
+		std::mutex mutex_;
+		std::condition_variable notFull_;
+		uint32_t finishCount_ = 0;
+		float miniCosts_[3];
+	};
 
 	struct
 	{
-		float kTriangle_ = 1.f;
-		float kAabb_ = 1.f * 2;
+		const float kTriangle_ = 1.f;
+		const float kAabb_ = 1.f * 2;
 	} sah_;
 
-	float miniCost_;
-	uint32_t leftCount_ = 0;
 	std::vector<uint32_t> sortedAabbIndices_;
 
-	void run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axisIndex);
+	void run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex);
 };

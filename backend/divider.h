@@ -4,6 +4,8 @@
 
 struct Divider
 {
+	AaBb sandbox_;
+
 	struct
 	{
 		float kTriangle_ = 1.f;

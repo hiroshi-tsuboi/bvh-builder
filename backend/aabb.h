@@ -14,6 +14,9 @@ struct AaBb
 
 	void grow(const AaBb& aabb);
 	void grow(float vertex[3]);
+
+	void minimize(const AaBb& sandbox);
+
 	float halfArea() const;
 	float center(uint32_t axisIndex) const
 	{

@@ -20,6 +20,15 @@ void AaBb::grow(float vertex[3])
 	}
 }
 
+void AaBb::minimize(const AaBb& sandbox)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		mini_[i] = fmax(mini_[i], sandbox.mini_[i]);
+		maxi_[i] = fmin(maxi_[i], sandbox.maxi_[i]);
+	}
+}
+
 float AaBb::halfArea() const
 {
 	auto ex = maxi_[0] - mini_[0];

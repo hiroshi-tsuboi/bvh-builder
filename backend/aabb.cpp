@@ -40,6 +40,8 @@ float AaBb::halfArea() const
 
 void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex)
 {
+	ownerIndex_ = triangleIndex;
+
 	auto triangleBaseIndex = triangleIndex * 4;
 	
 	for (uint32_t i = 0; i < 3; ++i)

@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-void Divider::process(const std::vector<AaBb>& aabbs, uint32_t axisIndex)
+void Divider::process(const std::vector<AaBb>& aabbs)
 {
 	assert(1 < aabbs.size());
 
@@ -17,7 +17,7 @@ void Divider::process(const std::vector<AaBb>& aabbs, uint32_t axisIndex)
 		for (uint32_t i = 0; i < aabbs.size(); ++i)
 		{
 			auto& aabb = aabbs.at(i);
-			items.push_back(std::make_tuple(aabb.center(axisIndex), 1.f / aabb.halfArea(), i));
+			items.push_back(std::make_tuple(aabb.center(axisIndex_), 1.f / aabb.halfArea(), i));
 		}
 
 		std::sort(items.begin(), items.end());
@@ -51,7 +51,7 @@ void Divider::process(const std::vector<AaBb>& aabbs, uint32_t axisIndex)
 	left.grow(aabbs.at(aabbs.size() - 1));
 	const auto baseHalfArea = left.halfArea();
 
-	float miniCost = sah_.kTriangle_ * aabbs.size();
+	miniCost_ = sah_.kTriangle_ * aabbs.size();
 
 	for (uint32_t i = 1; i < aabbs.size(); ++i)
 	{
@@ -59,9 +59,9 @@ void Divider::process(const std::vector<AaBb>& aabbs, uint32_t axisIndex)
 		auto rightTriangleCount = aabbs.size() - leftTriangleCount;
 
 		auto cost = sah_.kAabb_ + (leftHalfAreas.at(i - 1) * leftTriangleCount + rightHalfAreas.at(aabbs.size() - i) * rightTriangleCount) * sah_.kTriangle_ / baseHalfArea;
-		if (cost < miniCost)
+		if (cost < miniCost_)
 		{
-			miniCost = cost;
+			miniCost_ = cost;
 			leftCount_ = i;
 		}
 	}

@@ -46,6 +46,22 @@ struct Bvh
 
 	std::vector<Obj*> objs_;
 
+	struct Result
+	{
+		std::mutex mutex_;
+		std::condition_variable notFull_;
+		uint32_t finishCount_ = 0;
+		float miniCosts_[3];
+	};
+
+	const struct
+	{
+		float kTriangle_ = 1.f;
+		float kAabb_ = 1.f * 2;
+	} sah_;
+
+	void divide(Bvh::Node* node, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex);
+
 	bool build(const Triangular& triangular);
 
 	void join();

@@ -1,11 +1,11 @@
-#include "divider.h"
+#include "bvh.h"
 
 #include <tuple>
 #include <algorithm>
 
 #include <cassert>
 
-void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex)
+void Bvh::divide(Bvh::Node* node, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex)
 {
 	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
@@ -98,5 +98,5 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_p
 		}
 	}
 
-	// TODO divide & fork
+	// TODO fork
 }

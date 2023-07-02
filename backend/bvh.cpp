@@ -3,9 +3,6 @@
 
 #include "bvh.h"
 #include "aabb.h"
-#include "divider.h"
-
-
 
 void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
 {
@@ -20,7 +17,7 @@ void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* par
 bool Bvh::build(const Triangular& triangular)
 {
 	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();
-	auto sharedResult = std::make_shared<Divider::Result>();
+	auto sharedResult = std::make_shared<Result>();
 
 	auto& aabbs = *sharedAabbs.get();
 
@@ -36,14 +33,11 @@ bool Bvh::build(const Triangular& triangular)
 		root_.aabb_.grow(aabb);
 	}
 
-	std::vector<Divider> dividers(3);
 	std::vector<std::thread*> threads;
-	threads.reserve(dividers.size());
 
-	uint32_t axisIndex = 0;
-	for (auto& divider: dividers)
+	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		auto thread = new std::thread(&Divider::run, &divider, sharedAabbs, sharedResult, axisIndex++);
+		auto thread = new std::thread(&Bvh::divide, this, &root_, sharedAabbs, sharedResult, axisIndex++);
 		threads.push_back(thread);
 	}
 

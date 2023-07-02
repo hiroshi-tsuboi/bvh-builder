@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <mutex>
+#include <condition_variable>
 
 #include "aabb.h"
 
@@ -10,6 +11,9 @@ struct Divider
 	AaBb sandbox_;
 
 	std::mutex mutex_;
+	std::condition_variable notFull_;
+
+	uint32_t finishCount_ = 0;
 
 	struct
 	{

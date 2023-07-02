@@ -68,4 +68,21 @@ void Divider::run(std::shared_ptr<std::vector<AaBb> > sharedAabbs, uint32_t axis
 	}
 
 	// TODO
+
+	{
+		std::unique_lock<std::mutex> lk(mutex_);
+
+		++finishCount_;
+
+		if (3 == finishCount_)
+		{
+			notFull_.notify_all();
+		}
+		else
+		{
+			notFull_.wait(lk, [&]{ return finishCount_ == 3; });
+		}
+	}
+
+	// TODO
 }

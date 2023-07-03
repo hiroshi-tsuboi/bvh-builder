@@ -4,7 +4,7 @@
 #include "bvh.h"
 #include "aabb.h"
 
-void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
+void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 {
 	auto& aabbs = *sharedAabbs.get();
 
@@ -23,7 +23,7 @@ void Bvh::Node::link(Obj* child, int index)
 	childs_[index] = child;
 }
 
-void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
+void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 {
 	auto& aabbs = *sharedAabbs.get();
 
@@ -34,8 +34,6 @@ void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* par
 		aabb_.grow(aabb);
 		triangleIndices_.push_back(aabb.ownerIndex_);
 	}
-
-	// TODO
 }
 
 void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs)

@@ -98,9 +98,23 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
+	auto node = dynamic_cast<Bvh::Node*>(parent);
+
+	assert(node != nullptr);
+
 	if (leftCount == 0)
 	{
-		// TODO create leaf
+		auto leaf = new Bvh::Leaf();
+		if (leaf == nullptr)
+		{
+			// fatal error
+		}
+		else
+		{
+			node->link(leaf, childIndex);
+
+			leaf->create(sharedAabbs);
+		}
 	}
 	else
 	{

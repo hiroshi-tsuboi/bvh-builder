@@ -32,7 +32,7 @@ struct Bvh
 	{
 		Obj* childs_[2] = {nullptr, nullptr};
 		int type() override { return kNode; }
-		void create(std::shared_ptr<std::vector<AaBb> > sharedAabbs) override;
+		void create(std::shared_ptr<std::vector<AaBb> > sharedAabbs) override { /* nop */ };
 		void link(Obj* child, int index);
 	};
 

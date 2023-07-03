@@ -4,18 +4,6 @@
 #include "bvh.h"
 #include "aabb.h"
 
-void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
-{
-	auto& aabbs = *sharedAabbs.get();
-
-	for (auto& aabb: aabbs)
-	{
-		aabb_.grow(aabb);
-	}
-
-	// TODO
-}
-
 void Bvh::Node::link(Obj* child, int index)
 {
 	std::lock_guard<std::mutex> lk(mutex_);

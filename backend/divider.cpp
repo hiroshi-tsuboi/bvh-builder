@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include <cassert>
+#include <cmath>
 
 void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex)
 {
@@ -38,20 +39,21 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	leftHalfAreas.reserve(aabbs.size() - 1);
 	rightHalfAreas.reserve(aabbs.size() - 1);
 
-	AaBb left, right;
+	AaBb leftAabb, rightAabb;
 
 	for (uint32_t i = 1; i < aabbs.size(); ++i)
 	{
 		auto leftIndex = sortedAabbIndices.at(i - 1);
 		auto rightIndex = sortedAabbIndices.at(aabbs.size() - i);
 
-		left.grow(aabbs.at(leftIndex));
-		right.grow(aabbs.at(rightIndex));
-		leftHalfAreas.push_back(left.halfArea());
-		rightHalfAreas.push_back(right.halfArea());
+		leftAabb.grow(aabbs.at(leftIndex));
+		rightAabb.grow(aabbs.at(rightIndex));
+		leftHalfAreas.push_back(leftAabb.halfArea());
+		rightHalfAreas.push_back(rightAabb.halfArea());
 	}
 
-	const auto baseHalfArea = parent->aabb_.halfArea();
+	leftAabb.grow(aabbs.at(sortedAabbIndices.at(aabbs.size() - 1)));
+	const auto baseHalfArea = leftAabb.halfArea();
 
 	uint32_t leftCount = 0;
 	auto miniCost = sah_.kTriangle_ * aabbs.size();
@@ -118,15 +120,40 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			return;
 		}
 
-		node->create(sharedAabbs);
+		node->aabb_ = leftAabb;
 		parent->link(node, childIndex);
 
-		//const uint32_t orderIndices[3] = {0, leftCount, aabbs.size()};
+		const float threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).center(axisIndex);
+
 		for (int index = 0; index < 2; ++index)
 		{
-			auto sharedChildAabbs = std::make_shared<std::vector<AaBb> >();
+			size_t beginIndex = 0;
+			size_t endIndex = leftCount;
+			if (0 < index)
+			{
+				beginIndex = leftCount;
+				endIndex = sortedAabbIndices.size();
+			}	
 
-			// TODO copy left(index == 0) or right(index == 1) aabbs
+			auto sharedChildAabbs = std::make_shared<std::vector<AaBb> >();
+			auto& childAabbs = *sharedChildAabbs.get();
+			childAabbs.reserve(endIndex - beginIndex);
+
+			for (size_t j = beginIndex; j < endIndex; ++j)
+			{
+				AaBb aabb = aabbs.at(sortedAabbIndices.at(j));
+
+				if (index == 0)
+				{
+					aabb.maxi_[axisIndex] = fmin(aabb.maxi_[axisIndex], threshold);
+				}
+				else
+				{
+					aabb.mini_[axisIndex] = fmax(aabb.mini_[axisIndex], threshold);
+				}
+
+				childAabbs.push_back(aabb);
+			}	
 				
 			fork(node, index, sharedChildAabbs);
 		}

@@ -50,43 +50,14 @@ bool Bvh::build(const Triangular& triangular)
 		root_.aabb_.grow(aabb);
 	}
 
-	std::vector<std::thread*> threads;
-
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
+		std::lock_guard<std::mutex> lk(mutex_);
+
 		auto thread = new std::thread(&Bvh::divide, this, &root_, sharedAabbs, sharedResult, axisIndex++);
-		threads.push_back(thread);
+		queue_.push(thread);
 	}
 
-	for (auto thread: threads)
-	{
-		if (thread)
-		{
-			thread->join();
-			delete thread;
-		}
-	}
-#if 0
-	float miniCost = FLT_MAX;
-	int64_t miniAxisIndex = -1;
-	for (auto& divider: dividers)
-	{
-		if (divider.miniCost_ < miniCost)
-		{
-			miniAxisIndex = divider.axisIndex_;
-			miniCost = divider.miniCost_;
-		}
-	}
-
-	if (miniAxisIndex < 0 || dividers.at(miniAxisIndex).leftCount_ == 0)
-	{
-		// TODO create leaf
-	}
-	else
-	{
-		// TODO divied aabb to create node
-	}
-#endif
 	return true;
 }
 

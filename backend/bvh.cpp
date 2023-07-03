@@ -16,6 +16,13 @@ void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* par
 	// TODO
 }
 
+void Bvh::Node::link(Obj* child, int index)
+{
+	std::lock_guard<std::mutex> lk(mutex_);
+
+	childs_[index] = child;
+}
+
 void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
 {
 	auto& aabbs = *sharedAabbs.get();

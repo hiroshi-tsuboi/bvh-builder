@@ -30,9 +30,10 @@ struct Bvh
 
 	struct Node : Obj
 	{
-		Obj* childs_[2];
+		Obj* childs_[2] = {nullptr, nullptr};
 		int type() override { return kNode; }
 		void create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh) override;
+		void link(Obj* child, int index);
 	};
 
 	struct Leaf : Obj

@@ -6,11 +6,28 @@
 
 void Bvh::Node::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
 {
+	auto& aabbs = *sharedAabbs.get();
+
+	for (auto& aabb: aabbs)
+	{
+		aabb_.grow(aabb);
+	}
+
 	// TODO
 }
 
 void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs, Obj* parent, int childIndex, Bvh& bvh)
 {
+	auto& aabbs = *sharedAabbs.get();
+
+	triangleIndices_.reserve(aabbs.size());
+
+	for (auto& aabb: aabbs)
+	{
+		aabb_.grow(aabb);
+		triangleIndices_.push_back(aabb.ownerIndex_);
+	}
+
 	// TODO
 }
 

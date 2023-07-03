@@ -111,15 +111,15 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	}
 	else
 	{
-		auto child = new Bvh::Node();
-		if (child == nullptr)
+		auto node = new Bvh::Node();
+		if (node == nullptr)
 		{
 			// fatal error
 			return;
 		}
 
-		// TODO childNode->create()
-		parent->link(child, childIndex);
+		node->create(sharedAabbs);
+		parent->link(node, childIndex);
 
 		//const uint32_t orderIndices[3] = {0, leftCount, aabbs.size()};
 		for (int index = 0; index < 2; ++index)
@@ -128,7 +128,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 			// TODO copy left(index == 0) or right(index == 1) aabbs
 				
-			fork(child, index, sharedChildAabbs);
+			fork(node, index, sharedChildAabbs);
 		}
 	}
 }

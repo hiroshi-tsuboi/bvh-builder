@@ -5,7 +5,7 @@
 
 #include <cassert>
 
-void Bvh::divide(Bvh::Node* node, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex)
+void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex)
 {
 	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
@@ -98,5 +98,12 @@ void Bvh::divide(Bvh::Node* node, std::shared_ptr<std::vector<AaBb> > sharedAabb
 		}
 	}
 
-	// TODO fork
+	if (leftCount == 0)
+	{
+		// TODO create leaf
+	}
+	else
+	{
+		// TODO create nodes
+	}
 }

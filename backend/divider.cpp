@@ -98,9 +98,9 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
-	auto node = dynamic_cast<Bvh::Node*>(parent);
+	auto parentNode = dynamic_cast<Bvh::Node*>(parent);
 
-	assert(node != nullptr);
+	assert(parentNode != nullptr);
 
 	if (leftCount == 0)
 	{
@@ -108,16 +108,32 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		if (leaf == nullptr)
 		{
 			// fatal error
+			return;
 		}
-		else
-		{
-			node->link(leaf, childIndex);
 
-			leaf->create(sharedAabbs);
-		}
+		leaf->create(sharedAabbs);
+		parentNode->link(leaf, childIndex);
 	}
 	else
 	{
-		// TODO create nodes
+		auto childNode = new Bvh::Node();
+		if (childNode == nullptr)
+		{
+			// fatal error
+			return;
+		}
+
+		// TODO childNode->create()
+		parentNode->link(childNode, childIndex);
+
+		//const uint32_t orderIndices[3] = {0, leftCount, aabbs.size()};
+		for (int childIndex = 0; childIndex < 2; ++childIndex)
+		{
+			auto sharedChildAabbs = std::make_shared<std::vector<AaBb> >();
+
+			// TODO copy left(childIndex == 0) or right(childIndex == 1) aabbs
+				
+			fork(childNode, childIndex, sharedChildAabbs);
+		}
 	}
 }

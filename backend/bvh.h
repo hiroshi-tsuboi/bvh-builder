@@ -12,7 +12,7 @@ struct Bvh
 {
 	std::mutex mutex_;
 	std::condition_variable notFull_;
-	std::queue<std::thread*> queue_; 
+	std::queue<std::thread> queue_; 
 
 	enum
 	{

@@ -31,9 +31,7 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 	{
 		std::lock_guard<std::mutex> lk(mutex_);
 
-		auto thread = new std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex);
-
-		queue_.push(thread);
+		queue_.push(std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex));
 	}
 }
 

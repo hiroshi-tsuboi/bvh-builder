@@ -66,7 +66,7 @@ bool Bvh::build(const Triangular& triangular)
 		root_.aabb_.grow(aabb);
 	}
 
-	leftAmount_.count_ = 2;
+	leftAmount_.count_ = 1;
 
 	fork(&root_, 0, sharedAabbs);
 

@@ -11,6 +11,20 @@ void Bvh::Node::link(Obj* child, int index)
 	childs_[index] = child;
 }
 
+void Bvh::Node::destroy()
+{
+	for (auto child: childs_)
+	{
+		if (child == nullptr)
+		{
+			continue;
+		}
+
+		child->destroy();
+		delete child;
+	}
+}
+
 void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 {
 	auto& aabbs = *sharedAabbs.get();

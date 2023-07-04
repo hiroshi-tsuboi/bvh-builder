@@ -108,6 +108,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			return;
 		}
 
+		leaf->aabb_ = leftAabb;
 		leaf->create(sharedAabbs);
 		parent->link(leaf, childIndex);
 	}

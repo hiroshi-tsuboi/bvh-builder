@@ -19,7 +19,6 @@ void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 
 	for (auto& aabb: aabbs)
 	{
-		aabb_.grow(aabb);
 		triangleIndices_.push_back(aabb.ownerIndex_);
 	}
 }

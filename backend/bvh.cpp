@@ -25,15 +25,18 @@ void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 
 void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 {
-	std::lock_guard<std::mutex> lk(mutex_);
+	{
+		std::lock_guard<std::mutex> lk(mutex_);
 
-	++nodeParentCount_;
+		++nodeParentCount_;
+	}
 
 	auto sharedResult = std::make_shared<Result>();
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		threads_.push_back(std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex));
+		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex);
+		thread.detach();
 	}
 }
 
@@ -65,9 +68,4 @@ void Bvh::join()
 	std::unique_lock<std::mutex> lk(mutex_);
 
 	nodeCountSignal_.wait(lk, [&]{ return (nodeParentCount_ * 2) == nodeChildCount_; });
-
-	for (auto& thread: threads_)
-	{
-		thread.join();
-	}
 }

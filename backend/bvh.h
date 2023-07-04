@@ -10,7 +10,6 @@
 struct Bvh
 {
 	std::mutex mutex_;
-	std::vector<std::thread> threads_; 
 	std::condition_variable nodeCountSignal_;
 
 	uint32_t nodeParentCount_ = 0;

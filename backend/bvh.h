@@ -10,10 +10,12 @@
 struct Bvh
 {
 	std::mutex mutex_;
-	std::condition_variable nodeCountSignal_;
 
-	uint32_t nodeParentCount_ = 0;
-	uint32_t nodeChildCount_ = 0;
+	struct
+	{
+		std::condition_variable signal_;
+		uint32_t count_ = 0;
+	} leftAmount_;
 
 	enum
 	{

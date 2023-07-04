@@ -28,7 +28,7 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 	{
 		std::lock_guard<std::mutex> lk(mutex_);
 
-		++nodeParentCount_;
+		leftAmount_.count_ += 2;
 	}
 
 	auto sharedResult = std::make_shared<Result>();
@@ -67,5 +67,5 @@ void Bvh::join()
 {
 	std::unique_lock<std::mutex> lk(mutex_);
 
-	nodeCountSignal_.wait(lk, [&]{ return (nodeParentCount_ * 2) == nodeChildCount_; });
+	leftAmount_.signal_.wait(lk, [&]{ return leftAmount_.count_ == 0; });
 }

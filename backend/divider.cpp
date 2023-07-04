@@ -162,8 +162,8 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	{
 		std::lock_guard<std::mutex> lk(mutex_);
 
-		++nodeChildCount_;
+		--leftAmount_.count_;
 
-		nodeCountSignal_.notify_one();
+		leftAmount_.signal_.notify_one();
 	}
 }

@@ -3,7 +3,6 @@
 #include "aabb.h"
 #include "triangular.h"
 
-#include <queue>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
@@ -11,7 +10,8 @@
 struct Bvh
 {
 	std::mutex mutex_;
-	std::queue<std::thread> queue_; 
+	std::vector<std::thread> threads_; 
+	std::condition_variable nodeCountSignal_;
 
 	uint32_t nodeParentCount_ = 0;
 	uint32_t nodeChildCount_ = 0;

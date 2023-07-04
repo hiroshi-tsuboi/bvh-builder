@@ -33,7 +33,7 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		queue_.push(std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex));
+		threads_.push_back(std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex));
 	}
 }
 
@@ -62,13 +62,12 @@ bool Bvh::build(const Triangular& triangular)
 
 void Bvh::join()
 {
-	while (1)
+	std::unique_lock<std::mutex> lk(mutex_);
+
+	nodeCountSignal_.wait(lk, [&]{ return (nodeParentCount_ * 2) == nodeChildCount_; });
+
+	for (auto& thread: threads_)
 	{
-		std::unique_lock<std::mutex> lk(mutex_);
-
-
-		
-		
-
+		thread.join();
 	}
 }

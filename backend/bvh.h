@@ -11,8 +11,10 @@
 struct Bvh
 {
 	std::mutex mutex_;
-	std::condition_variable notFull_;
 	std::queue<std::thread> queue_; 
+
+	uint32_t nodeParentCount_ = 0;
+	uint32_t nodeChildCount_ = 0;
 
 	enum
 	{

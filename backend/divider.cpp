@@ -107,7 +107,6 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			// fatal error
 			return;
 		}
-
 		leaf->aabb_ = leftAabb;
 		leaf->create(sharedAabbs);
 		parent->link(leaf, childIndex);
@@ -158,5 +157,11 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 				
 			fork(node, index, sharedChildAabbs);
 		}
+	}
+
+	{
+		std::lock_guard<std::mutex> lk(mutex_);
+
+		++nodeChildCount_;
 	}
 }

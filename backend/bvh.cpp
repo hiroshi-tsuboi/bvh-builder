@@ -25,12 +25,14 @@ void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 
 void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs)
 {
+	std::lock_guard<std::mutex> lk(mutex_);
+
+	++nodeParentCount_;
+
 	auto sharedResult = std::make_shared<Result>();
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		std::lock_guard<std::mutex> lk(mutex_);
-
 		queue_.push(std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex));
 	}
 }
@@ -60,5 +62,13 @@ bool Bvh::build(const Triangular& triangular)
 
 void Bvh::join()
 {
-	// TODO
+	while (1)
+	{
+		std::unique_lock<std::mutex> lk(mutex_);
+
+
+		
+		
+
+	}
 }

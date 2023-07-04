@@ -123,6 +123,12 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		node->aabb_ = leftAabb;
 		parent->link(node, childIndex);
 
+		{
+			std::lock_guard<std::mutex> lk(mutex_);
+
+			leftAmount_.count_ += 2;
+		}
+
 		const float threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).center(axisIndex);
 
 		for (int index = 0; index < 2; ++index)

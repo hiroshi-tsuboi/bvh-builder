@@ -151,11 +151,11 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 				if (index == 0)
 				{
-					aabb.maxi_[axisIndex] = fmin(aabb.maxi_[axisIndex], threshold);
+					aabb.shrinkMax(axisIndex, threshold);
 				}
 				else
 				{
-					aabb.mini_[axisIndex] = fmax(aabb.mini_[axisIndex], threshold);
+					aabb.shrinkMin(axisIndex, threshold);
 				}
 
 				childAabbs.push_back(aabb);

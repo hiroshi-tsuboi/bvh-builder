@@ -23,7 +23,7 @@ struct AaBb
 			mini = value;
 		}
 	}
-	void ShrinkMax(int axisIndex, float value)
+	void shrinkMax(int axisIndex, float value)
 	{
 		auto& maxi = maxi_[axisIndex];
 		if (value < maxi)

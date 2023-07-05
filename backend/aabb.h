@@ -15,6 +15,23 @@ struct AaBb
 	void grow(const AaBb& aabb);
 	void grow(float vertex[3]);
 
+	void shrinkMin(int axisIndex, float value)
+	{
+		auto& mini = mini_[axisIndex];
+		if (mini < value)
+		{
+			mini = value;
+		}
+	}
+	void ShrinkMax(int axisIndex, float value)
+	{
+		auto& maxi = maxi_[axisIndex];
+		if (value < maxi)
+		{
+			maxi = value;
+		}
+	}
+
 	void minimize(const AaBb& sandbox);
 
 	float halfArea() const;

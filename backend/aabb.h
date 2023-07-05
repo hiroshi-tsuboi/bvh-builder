@@ -15,15 +15,7 @@ struct AaBb
 	void grow(const AaBb& aabb);
 	void grow(float vertex[3]);
 
-	void shrinkMin(uint32_t axisIndex, float value)
-	{
-		auto& mini = mini_[axisIndex];
-		if (mini < value)
-		{
-			mini = value;
-		}
-	}
-	void shrinkMax(uint32_t axisIndex, float value)
+	void shrinkIntoLeft(uint32_t axisIndex, float value)
 	{
 		auto& maxi = maxi_[axisIndex];
 		if (value < maxi)
@@ -31,9 +23,17 @@ struct AaBb
 			maxi = value;
 		}
 	}
+	void shrinkIntoRight(uint32_t axisIndex, float value)
+	{
+		auto& mini = mini_[axisIndex];
+		if (mini < value)
+		{
+			mini = value;
+		}
+	}
 
-	AaBb halfBodyMin(uint32_t axisIndex) const;
-	AaBb halfBodyMax(uint32_t axisIndex) const;
+	AaBb cutLeft(uint32_t axisIndex) const;
+	AaBb cutRight(uint32_t axisIndex) const;
 
 	void minimize(const AaBb& sandbox);
 

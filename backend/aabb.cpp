@@ -20,24 +20,24 @@ void AaBb::grow(float vertex[3])
 	}
 }
 
-AaBb AaBb::halfBodyMin(uint32_t axisIndex) const
+AaBb AaBb::cutLeft(uint32_t axisIndex) const
 {
 	AaBb aabb;
-
+       
 	aabb = *this;
 
-	aabb.maxi_[axisIndex] = center(axisIndex);
+	aabb.mini_[axisIndex] = center(axisIndex);
 
 	return aabb;
 }
 
-AaBb AaBb::halfBodyMax(uint32_t axisIndex) const
+AaBb AaBb::cutRight(uint32_t axisIndex) const
 {
 	AaBb aabb;
-
+       
 	aabb = *this;
 
-	aabb.mini_[axisIndex] = center(axisIndex);
+	aabb.maxi_[axisIndex] = center(axisIndex);
 
 	return aabb;
 }

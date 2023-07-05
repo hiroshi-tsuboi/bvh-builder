@@ -34,6 +34,9 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
+	// left: increase from minus
+	// right: decrease from plus
+
 	std::vector<float> leftHalfAreas, rightHalfAreas;
 
 	leftHalfAreas.reserve(aabbs.size() - 1);
@@ -91,13 +94,25 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
-	for (auto cost: result.miniCosts_)
+	// select axisIndex to divide
+
+	for (uint32_t i = 0; i < 3; ++i)
 	{
+		const auto cost = result.miniCosts_[i];
 		if (cost < miniCost)
 		{
 			return;
 		}
+		if (cost == miniCost)
+		{
+			if (i < axisIndex)
+			{ // may make leaf on any axisIndex
+				return;
+			}
+		}
 	}
+
+	// create node or leaf
 
 	if (leftCount == 0)
 	{
@@ -137,7 +152,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			size_t endIndex = leftCount;
 			if (0 < index)
 			{
-				beginIndex = leftCount;
+				beginIndex = leftCount - 1;
 				endIndex = sortedAabbIndices.size();
 			}	
 

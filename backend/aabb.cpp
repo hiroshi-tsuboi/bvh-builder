@@ -20,6 +20,28 @@ void AaBb::grow(float vertex[3])
 	}
 }
 
+AaBb AaBb::halfBodyMin(uint32_t axisIndex) const
+{
+	AaBb aabb;
+
+	aabb = *this;
+
+	aabb.maxi_[axisIndex] = center(axisIndex);
+
+	return aabb;
+}
+
+AaBb AaBb::halfBodyMax(uint32_t axisIndex) const
+{
+	AaBb aabb;
+
+	aabb = *this;
+
+	aabb.mini_[axisIndex] = center(axisIndex);
+
+	return aabb;
+}
+
 void AaBb::minimize(const AaBb& sandbox)
 {
 	for (int i = 0; i < 3; ++i)

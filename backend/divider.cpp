@@ -39,15 +39,15 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 	std::vector<float> leftHalfAreas, rightHalfAreas;
 
-	leftHalfAreas.reserve(aabbs.size() - 1);
-	rightHalfAreas.reserve(aabbs.size() - 1);
+	leftHalfAreas.reserve(aabbs.size());
+	rightHalfAreas.reserve(aabbs.size());
 
 	AaBb leftAabb, rightAabb;
 
-	for (uint32_t i = 1; i < aabbs.size(); ++i)
+	for (uint32_t i = 0; i < aabbs.size(); ++i)
 	{
-		auto leftIndex = sortedAabbIndices.at(i - 1);
-		auto rightIndex = sortedAabbIndices.at(aabbs.size() - i);
+		auto leftIndex = sortedAabbIndices.at(i);
+		auto rightIndex = sortedAabbIndices.at(aabbs.size() - 1 - i);
 
 		leftAabb.grow(aabbs.at(leftIndex).cutRight(axisIndex));
 		rightAabb.grow(aabbs.at(rightIndex).cutLeft(axisIndex));
@@ -61,16 +61,16 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	uint32_t leftCount = 0;
 	auto miniCost = sah_.kTriangle_ * aabbs.size();
 
-	for (uint32_t i = 1; i < aabbs.size(); ++i)
+	for (uint32_t i = 0; i < aabbs.size(); ++i)
 	{
-		auto leftTriangleCount = i;
-		auto rightTriangleCount = aabbs.size() - leftTriangleCount;
+		auto leftTriangleCount = i + 1;
+		auto rightTriangleCount = aabbs.size() - i;
 
-		auto cost = sah_.kAabb_ + (leftHalfAreas.at(i - 1) * leftTriangleCount + rightHalfAreas.at(aabbs.size() - i) * rightTriangleCount) * sah_.kTriangle_ / baseHalfArea;
+		auto cost = sah_.kAabb_ + (leftHalfAreas.at(i) * leftTriangleCount + rightHalfAreas.at(aabbs.size() - 1 - i) * rightTriangleCount) * sah_.kTriangle_ / baseHalfArea;
 		if (cost < miniCost)
 		{
 			miniCost = cost;
-			leftCount = i;
+			leftCount = leftTriangleCount;
 		}
 	}
 

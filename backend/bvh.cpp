@@ -25,10 +25,8 @@ void Bvh::Node::destroy()
 	}
 }
 
-void Bvh::Leaf::create(std::shared_ptr<std::vector<AaBb> > sharedAabbs)
+void Bvh::Leaf::create(const std::vector<AaBb>& aabbs)
 {
-	auto& aabbs = *sharedAabbs.get();
-
 	triangleIndices_.reserve(aabbs.size());
 
 	for (auto& aabb: aabbs)

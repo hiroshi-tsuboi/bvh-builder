@@ -123,7 +123,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			return;
 		}
 		leaf->aabb_ = leftAabb;
-		leaf->create(sharedAabbs);
+		leaf->create(aabbs);
 		parent->link(leaf, childIndex);
 	}
 	else
@@ -175,7 +175,21 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 				childAabbs.push_back(aabb);
 			}	
-				
+	
+			if (childAabbs.size() <= 2)
+			{
+				auto leaf = new Bvh::Leaf();
+				if (leaf == nullptr)
+				{
+					// fatal error
+					return;
+				}
+				//leaf->aabb_ = leftAabb;
+				leaf->create(childAabbs);
+				node->link(leaf, index);
+				continue;
+			}
+
 			fork(node, index, sharedChildAabbs);
 		}
 	}

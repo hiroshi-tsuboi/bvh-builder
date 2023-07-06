@@ -49,8 +49,8 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		auto leftIndex = sortedAabbIndices.at(i);
 		auto rightIndex = sortedAabbIndices.at(aabbs.size() - 1 - i);
 
-		leftAabb.grow(aabbs.at(leftIndex).cutRight(axisIndex));
-		rightAabb.grow(aabbs.at(rightIndex).cutLeft(axisIndex));
+		leftAabb.grow(aabbs.at(leftIndex).cutHalfRight(axisIndex));
+		rightAabb.grow(aabbs.at(rightIndex).cutHalfLeft(axisIndex));
 		leftHalfAreas.push_back(leftAabb.halfArea());
 		rightHalfAreas.push_back(rightAabb.halfArea());
 	}

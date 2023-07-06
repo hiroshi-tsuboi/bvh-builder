@@ -20,7 +20,7 @@ void AaBb::grow(float vertex[3])
 	}
 }
 
-AaBb AaBb::cutLeft(uint32_t axisIndex) const
+AaBb AaBb::cutHalfLeft(uint32_t axisIndex) const
 {
 	AaBb aabb;
        
@@ -31,7 +31,7 @@ AaBb AaBb::cutLeft(uint32_t axisIndex) const
 	return aabb;
 }
 
-AaBb AaBb::cutRight(uint32_t axisIndex) const
+AaBb AaBb::cutHalfRight(uint32_t axisIndex) const
 {
 	AaBb aabb;
        

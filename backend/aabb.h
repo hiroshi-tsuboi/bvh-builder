@@ -32,8 +32,8 @@ struct AaBb
 		}
 	}
 
-	AaBb cutLeft(uint32_t axisIndex) const;
-	AaBb cutRight(uint32_t axisIndex) const;
+	AaBb cutHalfLeft(uint32_t axisIndex) const;
+	AaBb cutHalfRight(uint32_t axisIndex) const;
 
 	float halfArea() const;
 	float center(uint32_t axisIndex) const

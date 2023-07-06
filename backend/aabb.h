@@ -35,8 +35,6 @@ struct AaBb
 	AaBb cutLeft(uint32_t axisIndex) const;
 	AaBb cutRight(uint32_t axisIndex) const;
 
-	void minimize(const AaBb& sandbox);
-
 	float halfArea() const;
 	float center(uint32_t axisIndex) const
 	{

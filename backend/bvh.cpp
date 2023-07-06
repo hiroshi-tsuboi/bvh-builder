@@ -35,19 +35,21 @@ void Bvh::Leaf::create(const std::vector<AaBb>& aabbs)
 	}
 }
 
-void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int level)
+void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int treeLevel)
 {
 	auto sharedResult = std::make_shared<Result>();
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex, level);
+		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex, treeLevel);
 		thread.detach();
 	}
 }
 
-bool Bvh::build(const Triangular& triangular)
+bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 {
+	maxTreeLevel_ = maxTreeLevel;
+
 	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();
 
 	auto& aabbs = *sharedAabbs.get();

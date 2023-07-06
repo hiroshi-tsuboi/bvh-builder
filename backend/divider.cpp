@@ -6,7 +6,7 @@
 #include <cassert>
 #include <cmath>
 
-void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex, int level)
+void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex, int treeLevel)
 {
 	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
@@ -126,7 +126,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		leaf->create(aabbs);
 		parent->link(leaf, childIndex);
 	}
-	else if (++level < maxLevel_)
+	else if (++treeLevel < maxTreeLevel_)
 	{
 
 		auto node = new Bvh::Node();
@@ -194,7 +194,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 				continue;
 			}
 
-			fork(node, index, sharedChildAabbs, level);
+			fork(node, index, sharedChildAabbs, treeLevel);
 		}
 	}
 	else

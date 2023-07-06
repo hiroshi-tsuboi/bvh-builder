@@ -35,13 +35,13 @@ void Bvh::Leaf::create(const std::vector<AaBb>& aabbs)
 	}
 }
 
-void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs)
+void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int level)
 {
 	auto sharedResult = std::make_shared<Result>();
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex);
+		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex, level);
 		thread.detach();
 	}
 }
@@ -66,7 +66,7 @@ bool Bvh::build(const Triangular& triangular)
 
 	leftAmount_.count_ = 1;
 
-	fork(&root_, 0, sharedAabbs);
+	fork(&root_, 0, sharedAabbs, 0);
 
 	return true;
 }

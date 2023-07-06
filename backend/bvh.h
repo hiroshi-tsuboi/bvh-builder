@@ -17,6 +17,8 @@ struct Bvh
 		uint32_t count_ = 0;
 	} leftAmount_;
 
+	int maxLevel_ = 16;
+
 	enum
 	{
 		kNode,
@@ -68,9 +70,9 @@ struct Bvh
 		int kTriangleCountThreshold_ = 2;
 	} sah_;
 
-	void divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex);
+	void divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex, int level);
 
-	void fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs);
+	void fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int level);
 
 	bool build(const Triangular& triangular);
 

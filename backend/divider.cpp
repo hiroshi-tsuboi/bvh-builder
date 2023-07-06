@@ -176,7 +176,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 				childAabbs.push_back(aabb);
 			}	
 	
-			if (childAabbs.size() <= 2)
+			if (childAabbs.size() <= sah_.triangleCountThreshold_)
 			{
 				auto leaf = new Bvh::Leaf();
 				if (leaf == nullptr)

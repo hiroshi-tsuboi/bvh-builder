@@ -1,6 +1,6 @@
 #include "tcp-server.h"
 #include "mesh.h"
-#include "triangular.h"
+#include "bvh.h"
 
 #include <iostream>
 
@@ -50,7 +50,30 @@ void BvhBuilder::main(Fifo* fifo)
 		}
 	}
 
+	std::vector<Bvh*> bvhs;
+	bvhs.reserve(triangulars.size());
+	for (uint32_t i = 0; i < triangulars.size(); ++i)
+	{
+		auto bvh = new Bvh();
+
+		bvhs.push_back(bvh);
+
+		bvh->build(triangulars.at(i));
+	}
+
+	for (auto bvh: bvhs)
+	{
+		bvh->join();
+	}
+
 	// TODO
+
+	for (auto bvh: bvhs)
+	{
+		bvh->root_.destroy();
+
+		delete bvh;
+	}
 }
 
 int main(int argc, char** argv)

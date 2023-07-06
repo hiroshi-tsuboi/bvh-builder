@@ -53,8 +53,6 @@ struct Bvh
 
 	Node root_;
 
-	std::vector<Obj*> objs_;
-
 	struct Result
 	{
 		std::mutex mutex_;
@@ -63,7 +61,7 @@ struct Bvh
 		float miniCosts_[3];
 	};
 
-	const struct
+	struct
 	{
 		float kTriangle_ = 1.f;
 		float kAabb_ = 1.f * 2;

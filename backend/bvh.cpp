@@ -1,5 +1,7 @@
 #include <thread>
 #include <memory>
+#include <iostream>
+#include <chrono>
 
 #include "bvh.h"
 #include "aabb.h"
@@ -75,6 +77,11 @@ bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 
 	fork(&root_, 0, sharedAabbs, 0);
 
+	{
+		auto thread = std::thread(&Bvh::Log::main, &log_);
+		thread.detach();
+	}
+	
 	return true;
 }
 
@@ -83,4 +90,51 @@ void Bvh::join()
 	std::unique_lock<std::mutex> lk(mutex_);
 
 	leftAmount_.signal_.wait(lk, [&]{ return leftAmount_.count_ == 0; });
+
+	log_.join();
+}
+
+void Bvh::Log::push(const std::string& line)
+{
+	std::lock_guard<std::mutex> lk(mutex_);
+	lines_.push(line);
+}
+
+void Bvh::Log::main()
+{
+	while (1)
+	{
+		std::unique_lock<std::mutex> lk(mutex_);
+
+		while (!lines_.empty())
+		{
+			auto& line = lines_.front();
+			std::cout << line << std::endl;
+			lines_.pop();
+
+			if (line == "finish")
+			{
+				return;
+			}
+		}
+	
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
+}
+
+void Bvh::Log::join()
+{
+	push("finish");
+
+	while (1)
+	{
+		std::unique_lock<std::mutex> lk(mutex_);
+
+		if (lines_.empty())
+		{
+			break;
+		}
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 }

@@ -6,6 +6,7 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <queue>
 
 struct Bvh
 {
@@ -68,9 +69,13 @@ struct Bvh
 		int kTriangleCountThreshold_ = 2;
 	} sah_;
 
-	struct
+	struct Log
 	{
-		std::vector<std::string> lines_;
+		std::mutex mutex_;
+		std::queue<std::string> lines_;
+		void push(const std::string& line);
+		void main();
+		void join();
 	} log_;
 
 	void divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex, int treeLevel);

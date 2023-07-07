@@ -1,6 +1,7 @@
 #include "aabb.h"
 
 #include <cmath>
+#include <cassert>
 
 void AaBb::grow(const AaBb& aabb)
 {
@@ -68,7 +69,11 @@ float AaBb::halfArea() const
 	auto ey = maxi_[1] - mini_[1];
 	auto ez = maxi_[2] - mini_[2];
 
-	return ex * ey + ey * ez + ez * ex;
+	auto r = ex * ey + ey * ez + ez * ex;
+
+	assert(0.f < r);
+
+	return r;
 }
 
 void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex)

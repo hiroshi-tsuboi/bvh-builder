@@ -167,11 +167,17 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 				if (index == 0)
 				{
-					aabb.shrinkIntoLeft(axisIndex, threshold);
+					if (!aabb.shrinkIntoLeft(axisIndex, threshold))
+					{
+						continue; // degenerated
+					}
 				}
 				else
 				{
-					aabb.shrinkIntoRight(axisIndex, threshold);
+					if (!aabb.shrinkIntoRight(axisIndex, threshold))
+					{
+						continue; // degenerated
+					}
 				}
 
 				childAabbs.push_back(aabb);

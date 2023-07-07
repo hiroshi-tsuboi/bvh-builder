@@ -20,6 +20,26 @@ void AaBb::grow(float vertex[3])
 	}
 }
 
+bool AaBb::shrinkIntoLeft(uint32_t axisIndex, float value)
+{
+	auto& maxi = maxi_[axisIndex];
+	if (value < maxi)
+	{
+		maxi = value;
+	}
+	return mini_[axisIndex] < maxi;
+}
+
+bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
+{
+	auto& mini = mini_[axisIndex];
+	if (mini < value)
+	{
+		mini = value;
+	}
+	return mini < maxi_[axisIndex];
+}
+
 AaBb AaBb::cutHalfLeft(uint32_t axisIndex) const
 {
 	AaBb aabb;

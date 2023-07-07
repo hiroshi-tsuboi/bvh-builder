@@ -27,8 +27,12 @@ bool AaBb::shrinkIntoLeft(uint32_t axisIndex, float value)
 	if (value < maxi)
 	{
 		maxi = value;
+		if (halfArea() <= 0.f)
+		{
+			return false;
+		}
 	}
-	return mini_[axisIndex] < maxi;
+	return mini_[axisIndex] <= maxi;
 }
 
 bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
@@ -37,8 +41,12 @@ bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
 	if (mini < value)
 	{
 		mini = value;
+		if (halfArea() <= 0.f)
+		{
+			return false;
+		}
 	}
-	return mini < maxi_[axisIndex];
+	return mini <= maxi_[axisIndex];
 }
 
 AaBb AaBb::cutHalfLeft(uint32_t axisIndex) const
@@ -69,11 +77,7 @@ float AaBb::halfArea() const
 	auto ey = maxi_[1] - mini_[1];
 	auto ez = maxi_[2] - mini_[2];
 
-	auto r = ex * ey + ey * ez + ez * ex;
-
-	assert(0.f < r);
-
-	return r;
+	return ex * ey + ey * ez + ez * ex;
 }
 
 void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex)

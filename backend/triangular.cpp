@@ -20,11 +20,11 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 	for (auto& indices: polygons)
 	{
 		auto indexSize = indices.size();
-		for (size_t baseIndex = 0; (baseIndex + 2) < indexSize; ++baseIndex)
+		for (size_t cornerIndex = 0; (cornerIndex + 2) < indexSize; ++cornerIndex)
 		{ // (0,1,2), (0,2,3), (0,3,4), (0,4,5) ...
 			for (uint32_t i = 0; i < 3; ++i)
 			{
-				auto index = indices.at(0 == i ? 0 : (baseIndex + i));
+				auto index = indices.at(0 == i ? 0 : (cornerIndex + i));
 				auto baseIndex = index * vertexStride + vertexOffset;
 
 				auto x = vertices.at(baseIndex);

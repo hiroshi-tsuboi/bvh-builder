@@ -48,6 +48,11 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 
 bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 {
+	if (triangular.indices_.empty())
+	{
+		return true;
+	}
+
 	maxTreeLevel_ = maxTreeLevel;
 
 	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();

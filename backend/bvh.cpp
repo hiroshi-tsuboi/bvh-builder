@@ -48,6 +48,45 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 	}
 }
 
+void Bvh::Result::write(uint32_t index, float value)
+{
+	std::unique_lock<std::mutex> lk(mutex_);
+
+	miniCosts_[index] = value;
+
+	++finishCount_;
+       
+	if (finishCount_ == 3)
+	{
+		notFull_.notify_all();
+	}
+	else
+	{
+		notFull_.wait(lk, [&]{ return 3 <= finishCount_; });
+	}
+}
+
+void Bvh::Result::finish(bool waitForAll)
+{
+	std::unique_lock<std::mutex> lk(mutex_);
+
+	++finishCount_;
+
+	if (waitForAll)
+	{
+		if (finishCount_ != 6)
+		{
+			notFull_.wait(lk, [&]{ return finishCount_ == 6; });
+		}
+		return;
+	}
+
+	if (finishCount_ == 6)
+	{
+		notFull_.notify_one();
+	}
+}
+
 bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 {
 	if (triangular.indices_.empty())

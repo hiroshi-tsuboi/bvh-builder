@@ -77,22 +77,8 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	// wait for threads
 
 	auto& result = *sharedResult.get();
-	{
-		std::unique_lock<std::mutex> lk(result.mutex_);
 
-		result.miniCosts_[axisIndex] = miniCost;
-
-		++result.finishCount_;
-
-		if (3 == result.finishCount_)
-		{
-			result.notFull_.notify_all();
-		}
-		else
-		{
-			result.notFull_.wait(lk, [&]{ return result.finishCount_ == 3; });
-		}
-	}
+	result.write(axisIndex, miniCost);
 
 	// select axisIndex to divide
 
@@ -101,12 +87,14 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		const auto cost = result.miniCosts_[i];
 		if (cost < miniCost)
 		{
+			result.finish();
 			return;
 		}
 		if (cost == miniCost)
 		{
 			if (i < axisIndex)
 			{ // may make leaf on any axisIndex
+				result.finish();
 				return;
 			}
 		}
@@ -207,6 +195,10 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	{
 		// debug code
 	}
+
+	// wait for threads
+
+	result.finish(true);
 
 	{
 		std::lock_guard<std::mutex> lk(mutex_);

@@ -58,8 +58,13 @@ struct Bvh
 	{
 		std::mutex mutex_;
 		std::condition_variable notFull_;
-		uint32_t finishCount_ = 0;
+
 		float miniCosts_[3];
+
+		uint32_t finishCount_ = 0;
+
+		void write(uint32_t index, float value);
+		void finish(bool waitForAll = false);
 	};
 
 	struct

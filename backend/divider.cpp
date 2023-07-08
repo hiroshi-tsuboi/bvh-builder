@@ -82,9 +82,10 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 	// select axisIndex to divide
 
-	for (uint32_t i = 0; i < 3; ++i)
+	for (uint32_t i = 1; i < 3; ++i)
 	{
-		const auto cost = result.miniCosts_[i];
+		auto j = (axisIndex + i) % 3;
+		const auto cost = result.miniCosts_[j];
 		if (cost < miniCost)
 		{
 			result.join();
@@ -92,7 +93,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 		if (cost == miniCost)
 		{
-			if (i < axisIndex)
+			if (j < axisIndex)
 			{ // may make leaf on any axisIndex
 				result.join();
 				return;

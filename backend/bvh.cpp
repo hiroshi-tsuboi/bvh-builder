@@ -68,7 +68,7 @@ void Bvh::Result::write(uint32_t index, float value)
 	}
 }
 
-void Bvh::Result::finish(bool waitForAll)
+void Bvh::Result::join(bool waitForAll)
 {
 	std::unique_lock<std::mutex> lk(mutex_);
 

@@ -56,7 +56,7 @@ struct Bvh
 		uint32_t finishCount_ = 0;
 
 		void write(uint32_t index, float value);
-		void finish(bool waitForAll = false);
+		void join(bool waitForAll = false);
 	};
 
 	struct LeftAmount

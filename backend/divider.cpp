@@ -87,14 +87,14 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		const auto cost = result.miniCosts_[i];
 		if (cost < miniCost)
 		{
-			result.finish();
+			result.join();
 			return;
 		}
 		if (cost == miniCost)
 		{
 			if (i < axisIndex)
 			{ // may make leaf on any axisIndex
-				result.finish();
+				result.join();
 				return;
 			}
 		}
@@ -195,7 +195,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 	// wait for threads
 
-	result.finish(true);
+	result.join(true);
 
 	leftAmount_.pop();
 }

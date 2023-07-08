@@ -95,5 +95,5 @@ struct Bvh
 
 	bool build(const Triangular& triangular, int maxTreeLevel = 1);
 
-	void join();
+	void join(bool dumpNodes = false);
 };

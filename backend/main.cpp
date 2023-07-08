@@ -64,10 +64,6 @@ void BvhBuilder::main(Fifo* fifo)
 	for (auto bvh: bvhs)
 	{
 		bvh->join();
-
-		//bvh->root_.dump(bvh);
-
-		bvh->log_.join();
 	}
 
 	// TODO

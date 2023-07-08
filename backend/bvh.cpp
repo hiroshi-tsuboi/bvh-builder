@@ -180,9 +180,16 @@ bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 	return true;
 }
 
-void Bvh::join()
+void Bvh::join(bool dumpNodes)
 {
 	leftAmount_.join();
+
+	if (dumpNodes)
+	{
+		root_.dump(this);
+	}
+
+	log_.join();
 }
 
 void Bvh::Log::push(const std::string& line)

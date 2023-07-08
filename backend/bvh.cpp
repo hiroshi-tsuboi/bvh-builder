@@ -104,17 +104,19 @@ void Bvh::Log::main()
 {
 	while (1)
 	{
-		std::unique_lock<std::mutex> lk(mutex_);
-
-		while (!lines_.empty())
 		{
-			auto& line = lines_.front();
-			std::cout << line << std::endl;
-			lines_.pop();
+			std::unique_lock<std::mutex> lk(mutex_);
 
-			if (line == "finish")
+			while (!lines_.empty())
 			{
-				return;
+				auto& line = lines_.front();
+				std::cout << line << std::endl;
+				lines_.pop();
+
+				if (line == "finish")
+				{
+					return;
+				}
 			}
 		}
 	
@@ -128,11 +130,13 @@ void Bvh::Log::join()
 
 	while (1)
 	{
-		std::unique_lock<std::mutex> lk(mutex_);
-
-		if (lines_.empty())
 		{
-			break;
+			std::unique_lock<std::mutex> lk(mutex_);
+
+			if (lines_.empty())
+			{
+				break;
+			}	
 		}
 
 		std::this_thread::sleep_for(std::chrono::seconds(1));

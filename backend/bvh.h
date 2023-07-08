@@ -10,16 +10,6 @@
 
 struct Bvh
 {
-	std::mutex mutex_;
-
-	struct
-	{
-		std::condition_variable signal_;
-		uint32_t count_ = 0;
-	} leftAmount_;
-
-	int maxTreeLevel_;
-
 	enum
 	{
 		kNode,
@@ -54,6 +44,8 @@ struct Bvh
 
 	Node root_;
 
+	int maxTreeLevel_;
+
 	struct Result
 	{
 		std::mutex mutex_;
@@ -66,6 +58,17 @@ struct Bvh
 		void write(uint32_t index, float value);
 		void finish(bool waitForAll = false);
 	};
+
+	struct LeftAmount
+	{
+		std::mutex mutex_;
+		std::condition_variable signal_;
+		uint32_t count_ = 0;
+
+		void push(uint32_t count);
+		void pop();
+		void join();
+	} leftAmount_;
 
 	struct
 	{

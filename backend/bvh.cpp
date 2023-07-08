@@ -6,6 +6,8 @@
 #include "bvh.h"
 #include "aabb.h"
 
+
+
 void Bvh::Node::link(Obj* child, int index)
 {
 	std::lock_guard<std::mutex> lk(mutex_);
@@ -87,6 +89,29 @@ void Bvh::Result::finish(bool waitForAll)
 	}
 }
 
+void Bvh::LeftAmount::push(uint32_t count)
+{
+	std::lock_guard<std::mutex> lk(mutex_);
+	count_ += count;
+}
+
+void Bvh::LeftAmount::pop()
+{
+	std::lock_guard<std::mutex> lk(mutex_);
+	--count_;
+	if (count_ == 0)
+	{
+		signal_.notify_one();
+	}
+}
+
+void Bvh::LeftAmount::join()
+{
+	std::unique_lock<std::mutex> lk(mutex_);
+
+	signal_.wait(lk, [&]{ return count_ == 0; });
+}
+
 bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 {
 	if (triangular.indices_.empty())
@@ -112,7 +137,7 @@ bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 		root_.aabb_.grow(aabb);
 	}
 
-	leftAmount_.count_ = 1;
+	leftAmount_.push(1);
 
 	fork(&root_, 0, sharedAabbs, 0);
 
@@ -126,9 +151,7 @@ bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 
 void Bvh::join()
 {
-	std::unique_lock<std::mutex> lk(mutex_);
-
-	leftAmount_.signal_.wait(lk, [&]{ return leftAmount_.count_ == 0; });
+	leftAmount_.join();
 
 	log_.join();
 }

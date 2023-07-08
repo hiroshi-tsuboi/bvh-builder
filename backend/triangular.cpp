@@ -56,3 +56,25 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 
 	return true;
 }
+
+Triangular::Triangle Triangular::at(uint32_t triangleIndex)
+{
+	Triangular::Triangle triangle;
+
+	auto triangleBaseIndex = triangleIndex * 4;
+	
+	for (uint32_t i = 0; i < 3; ++i)
+	{
+		auto& vertex = triangle.vertices_[i];
+		auto vertexBaseIndex = indices_.at(triangleBaseIndex + i) * 3;
+
+		for (uint32_t j = 0; j < 3; ++j)
+		{
+			vertex[j] = vertices_.at(vertexBaseIndex + j);
+		}
+	}
+
+	triangle.index_ = triangleIndex;
+
+	return triangle;
+}

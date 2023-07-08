@@ -181,6 +181,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 					leaf->aabb_.grow(aabb);
 				}
 				node->link(leaf, index);
+				leftAmount_.pop();
 				continue;
 			}
 

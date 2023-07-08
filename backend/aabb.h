@@ -26,6 +26,4 @@ struct AaBb
 	{
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}
-
-	void create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex);
 };

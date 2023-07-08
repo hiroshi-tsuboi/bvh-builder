@@ -16,5 +16,5 @@ struct Triangular
 		uint32_t index_;
 	};
 
-	Triangle at(uint32_t triangleIndex);
+	Triangle at(uint32_t triangleIndex) const;
 };

@@ -79,24 +79,3 @@ float AaBb::halfArea() const
 
 	return ex * ey + ey * ez + ez * ex;
 }
-
-void AaBb::create(const std::vector<float>& vertices, const std::vector<uint32_t>& triangles, uint32_t triangleIndex)
-{
-	ownerIndex_ = triangleIndex;
-
-	auto triangleBaseIndex = triangleIndex * 4;
-	
-	for (uint32_t i = 0; i < 3; ++i)
-	{
-		float vertex[3];
-
-		auto vertexBaseIndex = triangles.at(triangleBaseIndex + i) * 3;
-
-		for (uint32_t j = 0; j < 3; ++j)
-		{
-			vertex[j] = vertices.at(vertexBaseIndex + j);
-		}
-
-		grow(vertex);
-	}
-}

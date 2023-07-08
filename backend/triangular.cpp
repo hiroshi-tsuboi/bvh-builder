@@ -57,7 +57,7 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 	return true;
 }
 
-Triangular::Triangle Triangular::at(uint32_t triangleIndex)
+Triangular::Triangle Triangular::at(uint32_t triangleIndex) const
 {
 	Triangular::Triangle triangle;
 

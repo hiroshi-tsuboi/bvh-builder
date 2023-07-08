@@ -129,7 +129,16 @@ bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 
 	for (size_t triangleIndex = 0; triangleIndex < aabbs.size(); ++triangleIndex)
 	{
-		aabbs.at(triangleIndex).create(triangular.vertices_, triangular.indices_, triangleIndex);
+		auto triangle = triangular.at(triangleIndex);
+
+		auto& aabb = aabbs.at(triangleIndex);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			aabb.grow(triangle.vertices_[i]);
+		}
+
+		aabb.ownerIndex_ = triangle.index_;
 	}
 
 	for (auto& aabb: aabbs)

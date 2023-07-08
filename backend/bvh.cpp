@@ -6,7 +6,29 @@
 #include "bvh.h"
 #include "aabb.h"
 
+void Bvh::Node::dump(Bvh* bvh)
+{
+	bvh->log_.push(std::string("node aabb ="));
+	bvh->log_.push(std::string("\tmin = ") + std::to_string(aabb_.mini_[0]) + ","  + std::to_string(aabb_.mini_[1])  + ","  + std::to_string(aabb_.mini_[2]));
+	bvh->log_.push(std::string("\tmax = ") + std::to_string(aabb_.maxi_[0]) + ","  + std::to_string(aabb_.maxi_[1])  + ","  + std::to_string(aabb_.maxi_[2]));
 
+	for (auto child: childs_)
+	{
+		if (child)
+		{
+			child->dump(bvh);
+		}
+	}
+}
+
+void Bvh::Leaf::dump(Bvh* bvh)
+{
+	bvh->log_.push(std::string("leaf triangles ="));
+	for (auto index: triangleIndices_)
+	{
+		bvh->log_.push(std::string("\t") + std::to_string(index));
+	}
+}
 
 void Bvh::Node::link(Obj* child, int index)
 {
@@ -161,8 +183,6 @@ bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
 void Bvh::join()
 {
 	leftAmount_.join();
-
-	log_.join();
 }
 
 void Bvh::Log::push(const std::string& line)

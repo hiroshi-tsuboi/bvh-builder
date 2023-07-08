@@ -21,6 +21,7 @@ struct Bvh
 		std::mutex mutex_;
 		AaBb aabb_;
 		virtual int type() = 0;
+		virtual void dump(Bvh* bvh) = 0;
 		virtual void create(const std::vector<AaBb>& aabbs) = 0;
 		virtual void destroy() = 0;
 	};
@@ -29,6 +30,7 @@ struct Bvh
 	{
 		Obj* childs_[2] = {nullptr, nullptr};
 		int type() override { return kNode; }
+		void dump(Bvh* bvh) override;
 		void create(const std::vector<AaBb>& aabbs) override { /* nop */ };
 		void link(Obj* child, int index);
 		void destroy() override;
@@ -38,6 +40,7 @@ struct Bvh
 	{
 		std::vector<uint32_t> triangleIndices_;
 		int type() override { return kLeaf; } 
+		void dump(Bvh* bvh) override;
 		void create(const std::vector<AaBb>& aabbs) override;
 		void destroy() override { /* nop */ };
 	};

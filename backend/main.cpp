@@ -6,6 +6,7 @@
 
 struct BvhBuilder : TcpServer::Reader
 {
+	bool dumpNodes_ = false;
 	void main(Fifo* fifo) override;
 };
 
@@ -63,7 +64,7 @@ void BvhBuilder::main(Fifo* fifo)
 
 	for (auto bvh: bvhs)
 	{
-		bvh->join();
+		bvh->join(dumpNodes_);
 	}
 
 	// TODO
@@ -80,15 +81,19 @@ int main(int argc, char** argv)
 {
 	std::string ipv6Address;
 	int port = 8080;
+	BvhBuilder bvhBuilder;
 
 	for (int i = 1; i < argc; ++i)
 	{
+		auto arg = std::string(argv[i]);
+		if (arg == "--debug")
+		{
+			bvhBuilder.dumpNodes_ = true;
+		}
 		// TODO
 	}
 
 	TcpServer tcpServer;
-
-	BvhBuilder bvhBuilder;
 
 	tcpServer.run(ipv6Address, port, &bvhBuilder);
 

@@ -134,14 +134,26 @@ void Bvh::LeftAmount::join()
 	signal_.wait(lk, [&]{ return count_ == 0; });
 }
 
-bool Bvh::build(const Triangular& triangular, int maxTreeLevel)
+bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 {
 	if (triangular.indices_.empty())
 	{
 		return true;
 	}
 
-	maxTreeLevel_ = maxTreeLevel;
+	int maxTreeLevel = 1;
+	{
+		const auto triangleCount = triangular.indices_.size() / 4;
+		while (maxTreeLevel < 64)
+		{
+			if (triangleCount <= (1ull << maxTreeLevel))
+			{
+				break;
+			}
+			++maxTreeLevel;
+		}
+	}
+	maxTreeLevel_ = maxTreeLevel + extraTreeLevel;
 
 	auto sharedAabbs = std::make_shared<std::vector<AaBb> >();
 

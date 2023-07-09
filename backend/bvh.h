@@ -93,7 +93,7 @@ struct Bvh
 
 	void fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int treeLevel);
 
-	bool build(const Triangular& triangular, int maxTreeLevel = 1);
+	bool build(const Triangular& triangular, int extraTreeLevel = 1);
 
 	void join(bool dumpNodes = false);
 };

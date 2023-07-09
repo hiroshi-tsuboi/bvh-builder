@@ -13,7 +13,7 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 		{
 			triangleCount += indices.size() - 2;
 		}
-		indices_.reserve(triangleCount * 4);
+		triangles_.reserve(triangleCount);
 	}
 
 	uint32_t polygonIndex = 0;
@@ -22,6 +22,9 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 		auto indexSize = indices.size();
 		for (size_t cornerIndex = 0; (cornerIndex + 2) < indexSize; ++cornerIndex)
 		{ // (0,1,2), (0,2,3), (0,3,4), (0,4,5) ...
+			Triangle triangle;
+
+			triangle.indices_[3] = polygonIndex;
 			for (uint32_t i = 0; i < 3; ++i)
 			{
 				auto index = indices.at(0 == i ? 0 : (cornerIndex + i));
@@ -38,9 +41,12 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 					vertexMap.emplace(vertex, uint32_t(vertexMap.size()));
 				}
 
-				indices_.push_back(vertexMap.at(vertex));
+				triangle.indices_[i] = vertexMap.at(vertex);
 			}
-			indices_.push_back(polygonIndex);
+
+			// TODO compute inverse baycentric matrix
+
+			triangles_.push_back(triangle);
 		}
 		++polygonIndex;
 	}
@@ -57,24 +63,3 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 	return true;
 }
 
-Triangular::Triangle Triangular::at(uint32_t triangleIndex) const
-{
-	Triangular::Triangle triangle;
-
-	auto triangleBaseIndex = triangleIndex * 4;
-	
-	for (uint32_t i = 0; i < 3; ++i)
-	{
-		auto& vertex = triangle.vertices_[i];
-		auto vertexBaseIndex = indices_.at(triangleBaseIndex + i) * 3;
-
-		for (uint32_t j = 0; j < 3; ++j)
-		{
-			vertex[j] = vertices_.at(vertexBaseIndex + j);
-		}
-	}
-
-	triangle.index_ = triangleIndex;
-
-	return triangle;
-}

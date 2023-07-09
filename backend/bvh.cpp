@@ -136,14 +136,14 @@ void Bvh::LeftAmount::join()
 
 bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 {
-	if (triangular.indices_.empty())
+	if (triangular.triangles_.empty())
 	{
 		return true;
 	}
 
 	int maxTreeLevel = 1;
 	{
-		const auto triangleCount = triangular.indices_.size() / 4;
+		const auto triangleCount = triangular.triangles_.size();
 		while (maxTreeLevel < 64)
 		{
 			if (triangleCount <= (1ull << maxTreeLevel))
@@ -159,20 +159,28 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 
 	auto& aabbs = *sharedAabbs.get();
 
-	aabbs.resize(triangular.indices_.size() / 4);
+	aabbs.resize(triangular.triangles_.size());
 
 	for (size_t triangleIndex = 0; triangleIndex < aabbs.size(); ++triangleIndex)
 	{
-		auto triangle = triangular.at(triangleIndex);
+		const auto& triangle = triangular.triangles_.at(triangleIndex);
 
 		auto& aabb = aabbs.at(triangleIndex);
 
-		for (int i = 0; i < 3; ++i)
+		for (uint32_t i = 0; i < 3; ++i)
 		{
-			aabb.grow(triangle.vertices_[i]);
+			float vertex[3];
+			auto baseVertexIndex = triangle.indices_[i] * 3;
+
+			for (uint32_t j = 0; j < 3; ++j)
+			{
+				vertex[j] = triangular.vertices_.at(baseVertexIndex + j);
+			}
+
+			aabb.grow(vertex);
 		}
 
-		aabb.ownerIndex_ = triangle.index_;
+		aabb.ownerIndex_ = triangleIndex;
 	}
 
 	for (auto& aabb: aabbs)

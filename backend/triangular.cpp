@@ -1,4 +1,5 @@
 #include "triangular.h"
+#include "matrix3x3.h"
 
 #include <map>
 #include <tuple>
@@ -23,6 +24,7 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 		for (size_t cornerIndex = 0; (cornerIndex + 2) < indexSize; ++cornerIndex)
 		{ // (0,1,2), (0,2,3), (0,3,4), (0,4,5) ...
 			Triangle triangle;
+			Matrix3x3 matrix;
 
 			triangle.indices_[3] = polygonIndex;
 			for (uint32_t i = 0; i < 3; ++i)
@@ -42,9 +44,16 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 				}
 
 				triangle.indices_[i] = vertexMap.at(vertex);
+
+				matrix.values_[0][i] = x;
+				matrix.values_[1][i] = y;
+				matrix.values_[2][i] = z;
 			}
 
-			// TODO compute inverse baycentric matrix
+			if (!matrix.inverse(triangle.matrix_))
+			{
+				continue;		
+			}
 
 			triangles_.push_back(triangle);
 		}

@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "matrix3x3.h"
+
 struct Triangular
 {
 	std::vector<float> vertices_; // vertex = (x,y,z)
@@ -10,7 +12,7 @@ struct Triangular
 	struct Triangle
 	{
 		uint32_t indices_[4]; // = (vertex-index0,vertex-index1,vertex-index2,polygon-index)
-		float matrix_[3][3]; // for barycentric coordinates
+		Matrix3x3 matrix_; // for barycentric coordinates
 	};
 
 	std::vector<Triangle> triangles_;

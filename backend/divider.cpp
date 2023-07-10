@@ -114,6 +114,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		leaf->aabb_ = leftAabb;
 		leaf->create(aabbs);
 		parent->link(leaf, childIndex);
+		++score_.leaf_.count_;
 	}
 	else if (++treeLevel < maxTreeLevel_)
 	{
@@ -182,6 +183,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 					leaf->aabb_.grow(aabb);
 				}
 				node->link(leaf, index);
+				++score_.leaf_.count_;
 				leftAmount_.pop();
 				continue;
 			}

@@ -70,6 +70,8 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex, treeLevel);
 		thread.detach();
 	}
+
+	++score_.node_.count_;
 }
 
 void Bvh::Result::write(uint32_t index, float value)
@@ -141,6 +143,9 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 		return true;
 	}
 
+	score_.node_.count_ = 0;
+	score_.leaf_.count_ = 0;
+
 	int maxTreeLevel = 1;
 	{
 		const auto triangleCount = triangular.triangles_.size();
@@ -207,6 +212,13 @@ void Bvh::join(bool dumpNodes)
 	if (dumpNodes)
 	{
 		root_.dump(this);
+	}
+
+	{
+		log_.push("score:");
+		log_.push("\tnode count = " + std::to_string(score_.node_.count_));
+		log_.push("\tleaf count = " + std::to_string(score_.leaf_.count_));
+
 	}
 
 	log_.join();

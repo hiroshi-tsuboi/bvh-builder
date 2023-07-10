@@ -7,6 +7,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
+#include <atomic>
 
 struct Bvh
 {
@@ -72,6 +73,20 @@ struct Bvh
 		void pop();
 		void join();
 	} leftAmount_;
+
+	struct Score
+	{
+		struct
+		{
+			std::atomic<uint32_t> count_;
+		} node_;
+
+		struct
+		{
+			std::atomic<uint32_t> count_;
+		} leaf_;
+
+	} score_;
 
 	struct
 	{

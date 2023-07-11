@@ -74,20 +74,6 @@ struct Bvh
 		void join();
 	} leftAmount_;
 
-	struct Score
-	{
-		struct
-		{
-			std::atomic<uint32_t> count_;
-		} node_;
-
-		struct
-		{
-			std::atomic<uint32_t> count_;
-		} leaf_;
-
-	} score_;
-
 	struct
 	{
 		float kTriangle_ = 1.f;

@@ -12,8 +12,10 @@ struct AaBb
 
 	int64_t ownerIndex_ = -1;
 
+	std::vector<double> vertices_; // (x,y,z)
+
 	void grow(const AaBb& aabb);
-	void grow(float vertex[3]);
+	void grow(const float vertex[3]);
 
 	bool shrinkIntoLeft(uint32_t axisIndex, float value);
 	bool shrinkIntoRight(uint32_t axisIndex, float value);

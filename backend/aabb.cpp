@@ -12,12 +12,14 @@ void AaBb::grow(const AaBb& aabb)
 	}
 }
 
-void AaBb::grow(float vertex[3])
+void AaBb::grow(const float vertex[3])
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		mini_[i] = fmin(mini_[i], vertex[i]);
-		maxi_[i] = fmax(maxi_[i], vertex[i]);
+		auto& value = vertex[i];
+		mini_[i] = fmin(mini_[i], value);
+		maxi_[i] = fmax(maxi_[i], value);
+		vertices_.push_back(double(value));
 	}
 }
 

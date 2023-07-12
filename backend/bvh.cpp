@@ -169,7 +169,7 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 
 		for (uint32_t i = 0; i < 3; ++i)
 		{
-			float vertex[3];
+			double vertex[3];
 			auto baseVertexIndex = triangle.indices_[i] * 3;
 
 			for (uint32_t j = 0; j < 3; ++j)

@@ -15,7 +15,7 @@ struct AaBb
 	std::vector<double> vertices_; // (x,y,z)
 
 	void grow(const AaBb& aabb);
-	void grow(const float vertex[3]);
+	void grow(const double vertex[3]);
 
 	bool shrinkIntoLeft(uint32_t axisIndex, float value);
 	bool shrinkIntoRight(uint32_t axisIndex, float value);
@@ -29,5 +29,7 @@ struct AaBb
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}
 
-	bool inside(const float vertex[3]);
+	bool inside(const double vertex[3]) const;
+
+	AaBb optimize() const;
 };

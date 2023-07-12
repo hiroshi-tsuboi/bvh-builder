@@ -81,3 +81,17 @@ float AaBb::halfArea() const
 
 	return ex * ey + ey * ez + ez * ex;
 }
+
+bool AaBb::inside(const float vertex[3])
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		auto value = vertex[i];
+		if (value < mini_[i] || maxi_[i] < value)
+		{
+			return false; // outside
+		}
+	}
+
+	return true;
+}

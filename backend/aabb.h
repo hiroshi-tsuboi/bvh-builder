@@ -28,4 +28,6 @@ struct AaBb
 	{
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}
+
+	bool inside(const float vertex[3]);
 };

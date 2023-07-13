@@ -169,12 +169,12 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 
 		for (uint32_t i = 0; i < 3; ++i)
 		{
-			double vertex[3];
+			AaBb::Vertex vertex;
 			auto baseVertexIndex = triangle.indices_[i] * 3;
 
 			for (uint32_t j = 0; j < 3; ++j)
 			{
-				vertex[j] = triangular.vertices_.at(baseVertexIndex + j);
+				vertex.values_[j] = triangular.vertices_.at(baseVertexIndex + j);
 			}
 
 			aabb.grow(vertex);

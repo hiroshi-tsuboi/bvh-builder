@@ -12,10 +12,15 @@ struct AaBb
 
 	int64_t ownerIndex_ = -1;
 
-	std::vector<double> vertices_; // (x,y,z)
+	struct Vertex
+	{
+		double values_[3]; // (x,y,z)
+	};
+
+	std::vector<Vertex> vertices_;
 
 	void grow(const AaBb& aabb);
-	void grow(const double vertex[3]);
+	void grow(const Vertex& vertex);
 
 	bool shrinkIntoLeft(uint32_t axisIndex, float value);
 	bool shrinkIntoRight(uint32_t axisIndex, float value);
@@ -29,12 +34,12 @@ struct AaBb
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}
 
-	bool inside(const double vertex[3]) const;
+	bool inside(const Vertex& vertex) const;
 
 	AaBb optimize() const;
 
 	bool empty()
 	{
-		return vertices_.size() < 9;
+		return vertices_.size() < 3;
 	}
 };

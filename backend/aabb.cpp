@@ -12,14 +12,14 @@ void AaBb::grow(const AaBb& aabb)
 	}
 }
 
-void AaBb::grow(const double vertex[3])
+void AaBb::grow(const Vertex& vertex)
 {
+	vertices_.push_back(vertex);
 	for (int i = 0; i < 3; ++i)
 	{
-		auto& value = vertex[i];
+		auto& value = vertex.values_[i];
 		mini_[i] = fmin(mini_[i], value);
 		maxi_[i] = fmax(maxi_[i], value);
-		vertices_.push_back(value);
 	}
 }
 
@@ -76,11 +76,11 @@ float AaBb::halfArea() const
 	return ex * ey + ey * ez + ez * ex;
 }
 
-bool AaBb::inside(const double vertex[3]) const
+bool AaBb::inside(const Vertex& vertex) const
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		auto value = vertex[i];
+		auto value = vertex.values_[i];
 		if (value < mini_[i] || maxi_[i] < value)
 		{
 			return false; // outside
@@ -105,20 +105,17 @@ AaBb AaBb::optimize() const
 		}
 	}
 
-	const auto vertexCount = vertices_.size() / 3;
-
-	auto vertex_j = vertices_.data() + (vertexCount - 1) * 3;
+	AaBb::Vertex vertex_j = vertices_.back();
 	auto inside_j = inside(vertex_j);
 
-	for (size_t i = 0; i < vertexCount; ++i)
+	for (const auto& vertex_i: vertices_)
 	{
-		auto vertex_i = vertices_.data() + i * 3;
-		auto inside_i = inside(vertex_i);
+		const auto inside_i = inside(vertex_i);
 		
 		if (inside_i ^ inside_j)
 		{
 			double miniT = 1;
-			double miniVertex[3];
+			AaBb::Vertex miniVertex;
 
 			for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 			{
@@ -130,7 +127,7 @@ AaBb AaBb::optimize() const
 				// dot(N, vertex_i - vertex_j) * t = dot(N, O) - vertex_j
 				// t = (dot(N, O) - vertex_j) / dot(N, vertex_i - vertex_j)
 
-				auto d = vertex_i[axisIndex] - vertex_j[axisIndex];
+				auto d = vertex_i.values_[axisIndex] - vertex_j.values_[axisIndex];
 				if (d == 0)
 				{
 					continue;
@@ -138,12 +135,8 @@ AaBb AaBb::optimize() const
 
 				for (uint32_t side = 0; side < 2; ++side)
 				{
-					auto t = (origin[axisIndex][side] - vertex_j[axisIndex]) / d;
-					if (t <= 0 || 1 <= t)
-					{
-						continue;
-					}
-					if (miniT <= t)
+					auto t = (origin[axisIndex][side] - vertex_j.values_[axisIndex]) / d;
+					if (t <= 0 || miniT <= t)
 					{
 						continue;
 					}
@@ -152,7 +145,7 @@ AaBb AaBb::optimize() const
 
 					for (uint32_t index = 0; index < 3; ++index)
 					{
-						miniVertex[index] = vertex_i[index] * t + vertex_j[index] * (1 - t);
+						miniVertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
 					}
 				}
 			}

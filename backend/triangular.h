@@ -12,7 +12,7 @@ struct Triangular
 	struct Triangle
 	{
 		uint32_t indices_[4]; // = (vertex-index0,vertex-index1,vertex-index2,polygon-index)
-		Matrix3x3 matrix_; // for barycentric coordinates
+		//Matrix3x3 matrix_; // for barycentric coordinates
 	};
 
 	std::vector<Triangle> triangles_;

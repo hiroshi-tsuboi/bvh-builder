@@ -50,7 +50,8 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 				matrix.values_[2][i] = z;
 			}
 
-			if (!matrix.inverse(triangle.matrix_))
+			Matrix3x3 dummy;
+			if (!matrix.inverse(dummy))
 			{
 				continue;		
 			}

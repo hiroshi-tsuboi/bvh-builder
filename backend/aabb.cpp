@@ -110,7 +110,7 @@ AaBb AaBb::optimize() const
 	auto vertex_j = vertices_.data() + (vertexCount - 1) * 3;
 	auto inside_j = inside(vertex_j);
 
-	for (size_t i = 0; i < vertices_.size(); i += 3)
+	for (size_t i = 0; i < vertexCount; ++i)
 	{
 		auto vertex_i = vertices_.data() + i * 3;
 		auto inside_i = inside(vertex_i);

@@ -29,12 +29,9 @@ bool AaBb::shrinkIntoLeft(uint32_t axisIndex, float value)
 	if (value < maxi)
 	{
 		maxi = value;
-		if (halfArea() <= 0.f)
-		{
-			return false;
-		}
+		return true;
 	}
-	return mini_[axisIndex] <= maxi;
+	return false;
 }
 
 bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
@@ -43,12 +40,9 @@ bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
 	if (mini < value)
 	{
 		mini = value;
-		if (halfArea() <= 0.f)
-		{
-			return false;
-		}
+		return true;
 	}
-	return mini <= maxi_[axisIndex];
+	return false;
 }
 
 AaBb AaBb::cutHalfLeft(uint32_t axisIndex) const
@@ -105,6 +99,10 @@ AaBb AaBb::optimize() const
 	{
 		origin[axisIndex][0] = mini_[axisIndex];
 		origin[axisIndex][1] = maxi_[axisIndex];
+		if (maxi_[axisIndex] < mini_[axisIndex])
+		{
+			return aabb;
+		}
 	}
 
 	const auto vertexCount = vertices_.size() / 3;

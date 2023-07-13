@@ -152,16 +152,16 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 				if (index == 0)
 				{
-					if (!aabb.shrinkIntoLeft(axisIndex, threshold))
+					if (aabb.shrinkIntoLeft(axisIndex, threshold))
 					{
-						continue; // degenerated to line or point or void
+						// TODO optimize
 					}
 				}
 				else
 				{
-					if (!aabb.shrinkIntoRight(axisIndex, threshold))
+					if (aabb.shrinkIntoRight(axisIndex, threshold))
 					{
-						continue; // degenerated to line or point or void
+						// TODO optimize
 					}
 				}
 

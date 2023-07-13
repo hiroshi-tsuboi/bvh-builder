@@ -32,4 +32,9 @@ struct AaBb
 	bool inside(const double vertex[3]) const;
 
 	AaBb optimize() const;
+
+	bool empty()
+	{
+		return vertices_.size() < 9;
+	}
 };

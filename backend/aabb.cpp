@@ -150,9 +150,10 @@ AaBb AaBb::optimize() const
 				}
 			}
 
-			assert(0 < miniT && miniT < 1);
-
-			aabb.grow(miniVertex);
+			if (0 < miniT && miniT < 1)
+			{
+				aabb.grow(miniVertex);
+			}
 		}
 
 		if (inside_i)

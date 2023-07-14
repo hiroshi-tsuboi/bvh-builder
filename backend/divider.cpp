@@ -117,7 +117,6 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	}
 	else if (++treeLevel < maxTreeLevel_)
 	{
-
 		auto node = new Bvh::Node();
 		if (node == nullptr)
 		{
@@ -149,23 +148,31 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			for (size_t j = beginIndex; j < endIndex; ++j)
 			{
 				AaBb aabb = aabbs.at(sortedAabbIndices.at(j));
-
 				if (index == 0)
 				{
-					if (aabb.shrinkIntoLeft(axisIndex, threshold))
+					if (!aabb.shrinkIntoLeft(axisIndex, threshold))
 					{
-						// TODO optimize
+						childAabbs.push_back(aabb);
+						continue;
 					}
 				}
 				else
 				{
-					if (aabb.shrinkIntoRight(axisIndex, threshold))
+					if (!aabb.shrinkIntoRight(axisIndex, threshold))
 					{
-						// TODO optimize
+						childAabbs.push_back(aabb);
+						continue;
 					}
 				}
 
-				childAabbs.push_back(aabb);
+				auto optimizedAabb = aabb.optimize();
+
+				if (optimizedAabb.empty())
+				{
+					continue;
+				}
+
+				childAabbs.push_back(optimizedAabb);
 			}	
 	
 			if (childAabbs.size() <= sah_.kTriangleCountThreshold_)

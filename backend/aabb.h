@@ -25,8 +25,8 @@ struct AaBb
 	bool shrinkIntoLeft(uint32_t axisIndex, float value);
 	bool shrinkIntoRight(uint32_t axisIndex, float value);
 
-	AaBb cutHalfLeft(uint32_t axisIndex) const;
-	AaBb cutHalfRight(uint32_t axisIndex) const;
+	AaBb halfLeft(uint32_t axisIndex) const;
+	AaBb halfRight(uint32_t axisIndex) const;
 
 	float halfArea() const;
 	float center(uint32_t axisIndex) const

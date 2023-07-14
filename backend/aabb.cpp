@@ -45,24 +45,24 @@ bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
 	return false;
 }
 
-AaBb AaBb::cutHalfLeft(uint32_t axisIndex) const
-{
-	AaBb aabb;
-       
-	aabb = *this;
-
-	aabb.mini_[axisIndex] = center(axisIndex);
-
-	return aabb;
-}
-
-AaBb AaBb::cutHalfRight(uint32_t axisIndex) const
+AaBb AaBb::halfLeft(uint32_t axisIndex) const
 {
 	AaBb aabb;
        
 	aabb = *this;
 
 	aabb.maxi_[axisIndex] = center(axisIndex);
+
+	return aabb;
+}
+
+AaBb AaBb::halfRight(uint32_t axisIndex) const
+{
+	AaBb aabb;
+       
+	aabb = *this;
+
+	aabb.mini_[axisIndex] = center(axisIndex);
 
 	return aabb;
 }

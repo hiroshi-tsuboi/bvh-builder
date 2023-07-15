@@ -49,7 +49,7 @@ AaBb AaBb::halfLeft(uint32_t axisIndex) const
 {
 	AaBb aabb;
        
-	aabb = *this;
+	aabb.grow(*this);
 
 	aabb.maxi_[axisIndex] = center(axisIndex);
 
@@ -60,7 +60,7 @@ AaBb AaBb::halfRight(uint32_t axisIndex) const
 {
 	AaBb aabb;
        
-	aabb = *this;
+	aabb.grow(*this);
 
 	aabb.mini_[axisIndex] = center(axisIndex);
 
@@ -92,6 +92,8 @@ bool AaBb::inside(const Vertex& vertex) const
 
 AaBb AaBb::optimize() const
 {
+	assert(!vertices_.empty());
+
 	AaBb aabb;
 	double origin[3][2];
 
@@ -164,6 +166,8 @@ AaBb AaBb::optimize() const
 		inside_j = inside_i;
 		vertex_j = vertex_i;
 	}
+
+	assert(!aabb.vertices_.empty());
 
 	return aabb;
 }

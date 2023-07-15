@@ -25,6 +25,7 @@ struct AaBb
 	bool shrinkIntoLeft(uint32_t axisIndex, float value);
 	bool shrinkIntoRight(uint32_t axisIndex, float value);
 
+	// not copy vertices
 	AaBb halfLeft(uint32_t axisIndex) const;
 	AaBb halfRight(uint32_t axisIndex) const;
 

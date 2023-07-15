@@ -21,7 +21,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		for (uint32_t i = 0; i < aabbs.size(); ++i)
 		{
 			auto& aabb = aabbs.at(i);
-			items.push_back(std::make_tuple(aabb.center(axisIndex), 1.f / aabb.halfArea(), i));
+			items.push_back(std::make_tuple(aabb.center(axisIndex), aabb.halfArea(), i));
 		}
 
 		std::sort(items.begin(), items.end());

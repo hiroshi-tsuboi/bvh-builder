@@ -178,6 +178,11 @@ AaBb AaBb::optimize() const
 
 	assert(aabb.validate());
 
+	if (!aabb.empty())
+	{
+		//assert(aabb.halfArea() <= halfArea());
+	}
+
 	return aabb;
 }
 

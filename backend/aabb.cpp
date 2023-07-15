@@ -96,7 +96,7 @@ AaBb AaBb::optimize() const
 
 	AaBb aabb;
 	double origin[3][2];
-	int sideCounts[3];
+	int sideBeginIndices[3];
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
@@ -108,7 +108,7 @@ AaBb AaBb::optimize() const
 		}
 		origin[axisIndex][0] = mini;
 		origin[axisIndex][1] = maxi;
-		sideCounts[axisIndex] = maxi == mini ? 1 : 2;
+		sideBeginIndices[axisIndex] = maxi == mini ? 1 : 0;
 	}
 
 	AaBb::Vertex vertex_j = vertices_.back();
@@ -136,7 +136,7 @@ AaBb AaBb::optimize() const
 					continue;
 				}
 
-				for (uint32_t side = 0; side < sideCounts[axisIndex]; ++side)
+				for (uint32_t side = sideBeginIndices[axisIndex]; side < 2; ++side)
 				{
 					auto t = (origin[axisIndex][side] - vertex_j.values_[axisIndex]) / d;
 					if (t <= 0 || 1 <= t)

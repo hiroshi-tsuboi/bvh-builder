@@ -120,7 +120,6 @@ AaBb AaBb::optimize() const
 		
 		if (inside_i ^ inside_j)
 		{
-			int debugCount = 0;
 			for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 			{
 				// Plane : dot(N, P - O) = 0, N = (1,0,0) or (0,1,0) or (0,0,1)
@@ -157,12 +156,10 @@ AaBb AaBb::optimize() const
 						aabb.grow(vertex);
 						assert(aabb.validate());
 						axisIndex = 3;
-						++debugCount;
 						break;
 					}
 				}
 			}
-			assert(debugCount == 1);
 		}
 
 		if (inside_i)

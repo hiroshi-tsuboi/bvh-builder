@@ -122,12 +122,12 @@ AaBb AaBb::optimize() const
 			for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 			{
 				// Plane : dot(N, P - O) = 0, N = (1,0,0) or (0,1,0) or (0,0,1)
-				// Line : P(t) = vertex_i * t + vertex_j * (1 - t), 0 < t < 0
+				// Line : P(t) = vertex_i * t + vertex_j * (1 - t), 0 < t < 1
 				//
 				// dot(N, P(t) - O) = 0
 				// P(t) = vertex_i * t + vertex_j * (1 - t)
-				// dot(N, vertex_i - vertex_j) * t = dot(N, O) - vertex_j
-				// t = (dot(N, O) - vertex_j) / dot(N, vertex_i - vertex_j)
+				// dot(N, vertex_i - vertex_j) * t = dot(N, O - vertex_j)
+				// t = dot(N, O - vertex_j) / dot(N, vertex_i - vertex_j)
 
 				auto d = vertex_i.values_[axisIndex] - vertex_j.values_[axisIndex];
 				if (d == 0)
@@ -154,6 +154,7 @@ AaBb AaBb::optimize() const
 
 			if (0 < miniT && miniT < 1)
 			{
+				assert(inside(miniVertex));
 				aabb.grow(miniVertex);
 			}
 		}

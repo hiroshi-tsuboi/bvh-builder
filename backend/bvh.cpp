@@ -67,7 +67,7 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		auto thread = std::thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex, treeLevel);
+		std::thread thread(&Bvh::divide, this, parent, childIndex, sharedAabbs, sharedResult, axisIndex, treeLevel);
 		thread.detach();
 	}
 }
@@ -193,7 +193,7 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 	fork(&root_, 0, sharedAabbs, 0);
 
 	{
-		auto thread = std::thread(&Bvh::Log::main, &log_);
+		std::thread thread(&Bvh::Log::main, &log_);
 		thread.detach();
 	}
 	

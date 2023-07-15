@@ -111,7 +111,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			// fatal error
 			return;
 		}
-		leaf->aabb_ = leftAabb;
+		leaf->aabb_.grow(leftAabb);
 		leaf->create(aabbs);
 		parent->link(leaf, childIndex);
 	}
@@ -124,7 +124,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			return;
 		}
 
-		node->aabb_ = leftAabb;
+		node->aabb_.grow(leftAabb);
 		parent->link(node, childIndex);
 
 		leftAmount_.push(2);

@@ -2,6 +2,7 @@
 #include <memory>
 #include <iostream>
 #include <chrono>
+#include <cassert>
 
 #include "bvh.h"
 #include "aabb.h"
@@ -33,7 +34,7 @@ void Bvh::Leaf::dump(Bvh* bvh)
 void Bvh::Node::link(Obj* child, int index)
 {
 	std::lock_guard<std::mutex> lk(mutex_);
-
+	assert(childs_[index] == nullptr);
 	childs_[index] = child;
 }
 

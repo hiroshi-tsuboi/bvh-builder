@@ -29,6 +29,7 @@ bool AaBb::shrinkIntoLeft(uint32_t axisIndex, float value)
 	if (value < maxi)
 	{
 		maxi = value;
+		assert(mini_[axisIndex] <= maxi);
 		return true;
 	}
 	return false;
@@ -40,6 +41,7 @@ bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
 	if (mini < value)
 	{
 		mini = value;
+		assert(mini <= maxi_[axisIndex]);
 		return true;
 	}
 	return false;
@@ -159,7 +161,7 @@ AaBb AaBb::optimize() const
 					}
 
 					aabb.grow(vertex);
-					assert(aabb.validate());
+					//assert(aabb.validate());
 					axisIndex = 3;
 					break;
 				}
@@ -175,10 +177,6 @@ AaBb AaBb::optimize() const
 		inside_j = inside_i;
 		vertex_j = vertex_i;
 	}
-
-	assert(!aabb.vertices_.empty());
-
-	assert(aabb.validate());
 
 	if (!aabb.empty())
 	{

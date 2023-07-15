@@ -153,13 +153,15 @@ AaBb AaBb::optimize() const
 						vertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
 					}
 
-					if (inside(vertex))
+					if (!inside(vertex))
 					{
-						aabb.grow(vertex);
-						assert(aabb.validate());
-						axisIndex = 3;
-						break;
+						continue;
 					}
+
+					aabb.grow(vertex);
+					assert(aabb.validate());
+					axisIndex = 3;
+					break;
 				}
 			}
 		}

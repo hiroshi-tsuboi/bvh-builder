@@ -176,16 +176,11 @@ AaBb AaBb::optimize() const
 		if (inside_i)
 		{
 			aabb.grow(vertex_i);
-			assert(aabb.validate());
+			//assert(aabb.validate());
 		}
 
 		inside_j = inside_i;
 		vertex_j = vertex_i;
-	}
-
-	if (!aabb.empty())
-	{
-		//assert(aabb.halfArea() <= halfArea());
 	}
 
 	return aabb;

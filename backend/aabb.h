@@ -7,8 +7,8 @@
 
 struct AaBb
 {
-	float mini_[3] = {FLT_MAX, FLT_MAX, FLT_MAX};
-	float maxi_[3] = {-FLT_MAX, -FLT_MAX, -FLT_MAX};
+	double mini_[3] = {DBL_MAX, DBL_MAX, DBL_MAX};
+	double maxi_[3] = {-DBL_MAX, -DBL_MAX, -DBL_MAX};
 
 	int64_t ownerIndex_ = -1;
 
@@ -39,8 +39,10 @@ struct AaBb
 
 	AaBb optimize() const;
 
-	bool empty()
+	bool empty() const
 	{
 		return vertices_.size() < 3;
 	}
+
+	bool validate() const;
 };

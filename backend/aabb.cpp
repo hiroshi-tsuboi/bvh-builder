@@ -150,6 +150,7 @@ AaBb AaBb::optimize() const
 					if (inside(vertex))
 					{
 						aabb.grow(vertex);
+						assert(aabb.validate());
 						axisIndex = 3;
 						break;
 					}
@@ -160,6 +161,7 @@ AaBb AaBb::optimize() const
 		if (inside_i)
 		{
 			aabb.grow(vertex_i);
+			assert(aabb.validate());
 		}
 
 		inside_j = inside_i;
@@ -168,5 +170,20 @@ AaBb AaBb::optimize() const
 
 	assert(!aabb.vertices_.empty());
 
+	assert(aabb.validate());
+
 	return aabb;
+}
+
+bool AaBb::validate() const
+{
+	for (auto& vertex: vertices_)
+	{
+		if (!inside(vertex))
+		{
+			return false;
+		}
+	}
+
+	return !vertices_.empty();
 }

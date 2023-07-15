@@ -96,15 +96,19 @@ AaBb AaBb::optimize() const
 
 	AaBb aabb;
 	double origin[3][2];
+	int sideCounts[3];
 
 	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 	{
-		origin[axisIndex][0] = mini_[axisIndex];
-		origin[axisIndex][1] = maxi_[axisIndex];
-		if (maxi_[axisIndex] < mini_[axisIndex])
+		auto mini = mini_[axisIndex];
+		auto maxi = maxi_[axisIndex];
+		if (maxi < mini)
 		{
 			return aabb;
 		}
+		origin[axisIndex][0] = mini;
+		origin[axisIndex][1] = maxi;
+		sideCounts[axisIndex] = maxi == mini ? 1 : 2;
 	}
 
 	AaBb::Vertex vertex_j = vertices_.back();
@@ -133,7 +137,7 @@ AaBb AaBb::optimize() const
 					continue;
 				}
 
-				for (uint32_t side = 0; side < 2; ++side)
+				for (uint32_t side = 0; side < sideCounts[axisIndex]; ++side)
 				{
 					auto t = (origin[axisIndex][side] - vertex_j.values_[axisIndex]) / d;
 					if (t <= 0 || 1 <= t)
@@ -152,13 +156,13 @@ AaBb AaBb::optimize() const
 					{
 						aabb.grow(vertex);
 						assert(aabb.validate());
-						//axisIndex = 3;
-						//break;
+						axisIndex = 3;
 						++debugCount;
+						break;
 					}
 				}
 			}
-			assert(debugCount <= 1);
+			assert(debugCount == 1);
 		}
 
 		if (inside_i)

@@ -146,8 +146,10 @@ AaBb AaBb::optimize() const
 
 					AaBb::Vertex vertex;
 
-					for (uint32_t index = 0; index < 3; ++index)
+					vertex.values_[axisIndex] = origin[axisIndex][side];
+					for (uint32_t i = 1; i < 3; ++i)
 					{
+						auto index = (axisIndex + i) % 3;
 						vertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
 					}
 

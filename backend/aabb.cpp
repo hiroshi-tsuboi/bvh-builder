@@ -98,9 +98,9 @@ AaBb AaBb::optimize() const
 
 	AaBb aabb;
 	double origin[3][2];
-	uint32_t sideBeginIndices[3];
+	uint32_t orderMask = 0;
 
-	for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
+	for (int axisIndex = 2; 0 <= axisIndex; --axisIndex)
 	{
 		auto mini = mini_[axisIndex];
 		auto maxi = maxi_[axisIndex];
@@ -110,7 +110,8 @@ AaBb AaBb::optimize() const
 		}
 		origin[axisIndex][0] = mini;
 		origin[axisIndex][1] = maxi;
-		sideBeginIndices[axisIndex] = maxi == mini ? 1 : 0;
+		orderMask <<= 2;
+		orderMask |= maxi == mini ? 1 : 3;
 	}
 
 	AaBb::Vertex vertex_j = vertices_.back();
@@ -122,8 +123,18 @@ AaBb AaBb::optimize() const
 		
 		if (inside_i ^ inside_j)
 		{
-			for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
+			uint32_t orderIndex = 0;
+			for (auto mask = orderMask; mask != 0; mask >>= 1)
 			{
+				auto axisIndex = orderIndex / 2;
+				auto sideIndex = orderIndex & 1;
+				++orderIndex;
+
+				if ((mask & 1) == 0)
+				{
+					continue;
+				}
+
 				// Plane : dot(N, P - O) = 0, N = (1,0,0) or (0,1,0) or (0,0,1)
 				// Line : P(t) = vertex_i * t + vertex_j * (1 - t), 0 < t < 1
 				//
@@ -138,33 +149,28 @@ AaBb AaBb::optimize() const
 					continue;
 				}
 
-				for (auto side = sideBeginIndices[axisIndex]; side < 2; ++side)
+				auto t = (origin[axisIndex][sideIndex] - vertex_j.values_[axisIndex]) / d;
+				if (t <= 0 || 1 <= t)
 				{
-					auto t = (origin[axisIndex][side] - vertex_j.values_[axisIndex]) / d;
-					if (t <= 0 || 1 <= t)
-					{
-						continue;
-					}
-
-					AaBb::Vertex vertex;
-
-					vertex.values_[axisIndex] = origin[axisIndex][side];
-					for (uint32_t i = 1; i < 3; ++i)
-					{
-						auto index = (axisIndex + i) % 3;
-						vertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
-					}
-
-					if (!inside(vertex))
-					{
-						continue;
-					}
-
-					aabb.grow(vertex);
-					//assert(aabb.validate());
-					axisIndex = 3;
-					break;
+					continue;
 				}
+
+				AaBb::Vertex vertex;
+
+				vertex.values_[axisIndex] = origin[axisIndex][sideIndex];
+				axisIndex = (axisIndex + 1) % 3;
+				vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
+				axisIndex = (axisIndex + 1) % 3;
+				vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
+
+				if (!inside(vertex))
+				{
+					continue;
+				}
+
+				aabb.grow(vertex);
+				//assert(aabb.validate());
+				break;
 			}
 		}
 

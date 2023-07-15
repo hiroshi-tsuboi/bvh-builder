@@ -116,9 +116,6 @@ AaBb AaBb::optimize() const
 		
 		if (inside_i ^ inside_j)
 		{
-			double miniT = 1;
-			AaBb::Vertex miniVertex;
-
 			for (uint32_t axisIndex = 0; axisIndex < 3; ++axisIndex)
 			{
 				// Plane : dot(N, P - O) = 0, N = (1,0,0) or (0,1,0) or (0,0,1)
@@ -138,24 +135,25 @@ AaBb AaBb::optimize() const
 				for (uint32_t side = 0; side < 2; ++side)
 				{
 					auto t = (origin[axisIndex][side] - vertex_j.values_[axisIndex]) / d;
-					if (t <= 0 || miniT <= t)
+					if (t <= 0 || 1 <= t)
 					{
 						continue;
 					}
 
-					miniT = t;
+					AaBb::Vertex vertex;
 
 					for (uint32_t index = 0; index < 3; ++index)
 					{
-						miniVertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
+						vertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
+					}
+
+					if (inside(vertex))
+					{
+						aabb.grow(vertex);
+						axisIndex = 3;
+						break;
 					}
 				}
-			}
-
-			if (0 < miniT && miniT < 1)
-			{
-				assert(inside(miniVertex));
-				aabb.grow(miniVertex);
 			}
 		}
 

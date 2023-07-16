@@ -131,11 +131,11 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 		const float threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).center(axisIndex);
 
-		for (int index = 0; index < 2; ++index)
+		for (int sideIndex = 0; sideIndex < 2; ++sideIndex)
 		{
 			size_t beginIndex = 0;
 			size_t endIndex = leftCount;
-			if (0 < index)
+			if (0 < sideIndex)
 			{
 				beginIndex = leftCount - 1;
 				endIndex = sortedAabbIndices.size();
@@ -148,7 +148,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			for (size_t j = beginIndex; j < endIndex; ++j)
 			{
 				AaBb aabb = aabbs.at(sortedAabbIndices.at(j));
-				if (index == 0)
+				if (sideIndex == 0)
 				{
 					if (!aabb.shrinkIntoLeft(axisIndex, threshold))
 					{
@@ -165,7 +165,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 					}
 				}
 
-				auto optimizedAabb = aabb.optimize();
+				auto optimizedAabb = aabb.optimize(axisIndex, sideIndex ^ 1);
 
 				if (optimizedAabb.empty())
 				{
@@ -188,12 +188,12 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 				{
 					leaf->aabb_.grow(aabb);
 				}
-				node->link(leaf, index);
+				node->link(leaf, sideIndex);
 				leftAmount_.pop();
 				continue;
 			}
 
-			fork(node, index, sharedChildAabbs, treeLevel);
+			fork(node, sideIndex, sharedChildAabbs, treeLevel);
 		}
 	}
 	else

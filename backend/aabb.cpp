@@ -92,24 +92,13 @@ bool AaBb::inside(const Vertex& vertex) const
 	return true;
 }
 
-AaBb AaBb::optimize() const
+AaBb AaBb::optimize(uint32_t axisIndex, uint32_t sideIndex) const
 {
 	assert(!vertices_.empty());
 
-	AaBb aabb;
-	uint32_t orderMask = 0;
+	assert(mini_[axisIndex] <= maxi_[axisIndex]);
 
-	for (int axisIndex = 2; 0 <= axisIndex; --axisIndex)
-	{
-		auto mini = mini_[axisIndex];
-		auto maxi = maxi_[axisIndex];
-		if (maxi < mini)
-		{
-			return aabb;
-		}
-		orderMask <<= 2;
-		orderMask |= maxi == mini ? 1 : 3;
-	}
+	AaBb aabb;
 
 	AaBb::Vertex vertex_j = vertices_.back();
 	auto inside_j = inside(vertex_j);
@@ -117,21 +106,16 @@ AaBb AaBb::optimize() const
 	for (const auto& vertex_i: vertices_)
 	{
 		const auto inside_i = inside(vertex_i);
-		
+
 		if (inside_i ^ inside_j)
 		{
-			uint32_t orderIndex = 0;
-			for (auto mask = orderMask; mask != 0; mask >>= 1)
+			const auto d = vertex_i.values_[axisIndex] - vertex_j.values_[axisIndex];
+			if (d == 0)
 			{
-				auto axisIndex = orderIndex / 2;
-				auto sideIndex = orderIndex & 1;
-				++orderIndex;
-
-				if ((mask & 1) == 0)
-				{
-					continue;
-				}
-
+				// line on plane
+			}
+			else
+			{
 				// Plane : dot(N, P - O) = 0, N = (1,0,0) or (0,1,0) or (0,0,1)
 				// Line : P(t) = vertex_i * t + vertex_j * (1 - t), 0 < t < 1
 				//
@@ -140,36 +124,29 @@ AaBb AaBb::optimize() const
 				// dot(N, vertex_i - vertex_j) * t = dot(N, O - vertex_j)
 				// t = dot(N, O - vertex_j) / dot(N, vertex_i - vertex_j)
 
-				auto d = vertex_i.values_[axisIndex] - vertex_j.values_[axisIndex];
-				if (d == 0)
-				{
-					continue;
-				}
-
 				auto o = 0 == sideIndex ? mini_[axisIndex] : maxi_[axisIndex];
 
 				auto t = (o - vertex_j.values_[axisIndex]) / d;
-				if (t <= 0 || 1 <= t)
+
+				if (0 < t && t < 1)
 				{
-					continue;
+					AaBb::Vertex vertex;
+
+					vertex.values_[axisIndex] = o;
+					axisIndex = (axisIndex + 1) % 3;
+					vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
+					axisIndex = (axisIndex + 1) % 3;
+					vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
+
+					assert(inside(vertex));
+
+					aabb.grow(vertex);
+					//assert(aabb.validate());
 				}
-
-				AaBb::Vertex vertex;
-
-				vertex.values_[axisIndex] = o;
-				axisIndex = (axisIndex + 1) % 3;
-				vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
-				axisIndex = (axisIndex + 1) % 3;
-				vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
-
-				if (!inside(vertex))
+				else
 				{
-					continue;
+					// vertex[i or j] on plane
 				}
-
-				aabb.grow(vertex);
-				//assert(aabb.validate());
-				break;
 			}
 		}
 

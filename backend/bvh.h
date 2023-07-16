@@ -76,8 +76,8 @@ struct Bvh
 
 	struct
 	{
-		float kTriangle_ = 1.f;
-		float kAabb_ = 1.f * 2;
+		double kTriangle_ = 1.f;
+		double kAabb_ = 1.f * 2;
 		int kTriangleCountThreshold_ = 2;
 	} sah_;
 

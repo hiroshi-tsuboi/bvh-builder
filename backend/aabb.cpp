@@ -134,10 +134,19 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 					AaBb::Vertex vertex;
 
 					vertex.values_[axisIndex] = o;
-					auto index1 = (axisIndex + 1) % 3;
-					vertex.values_[index1] = vertex_i.values_[index1] * t + vertex_j.values_[index1] * (1 - t);
-					auto index2 = (axisIndex + 2) % 3;
-					vertex.values_[index2] = vertex_i.values_[index2] * t + vertex_j.values_[index2] * (1 - t);
+
+					for (uint32_t j = 1; j < 3; ++j)
+					{
+						auto index = (axisIndex + j) % 3;
+						if (vertex_i.values_[index] == vertex_j.values_[index])
+						{ // cope with degeneration
+							vertex.values_[index] = vertex_i.values_[index];
+						}
+						else
+						{
+							vertex.values_[index] = vertex_i.values_[index] * t + vertex_j.values_[index] * (1 - t);
+						}
+					}
 
 					assert(inside(vertex));
 

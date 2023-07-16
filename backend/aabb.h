@@ -37,7 +37,7 @@ struct AaBb
 
 	bool inside(const Vertex& vertex) const;
 
-	AaBb optimize(uint32_t axisIndex, uint32_t sideIndex) const;
+	AaBb optimize(const uint32_t axisIndex, const uint32_t sideIndex) const;
 
 	bool empty() const
 	{

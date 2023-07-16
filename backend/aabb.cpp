@@ -1,5 +1,6 @@
 #include "aabb.h"
 
+#include <iostream>
 #include <cmath>
 #include <cassert>
 
@@ -92,7 +93,7 @@ bool AaBb::inside(const Vertex& vertex) const
 	return true;
 }
 
-AaBb AaBb::optimize(uint32_t axisIndex, uint32_t sideIndex) const
+AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 {
 	assert(!vertices_.empty());
 
@@ -133,10 +134,10 @@ AaBb AaBb::optimize(uint32_t axisIndex, uint32_t sideIndex) const
 					AaBb::Vertex vertex;
 
 					vertex.values_[axisIndex] = o;
-					axisIndex = (axisIndex + 1) % 3;
-					vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
-					axisIndex = (axisIndex + 1) % 3;
-					vertex.values_[axisIndex] = vertex_i.values_[axisIndex] * t + vertex_j.values_[axisIndex] * (1 - t);
+					auto index1 = (axisIndex + 1) % 3;
+					vertex.values_[index1] = vertex_i.values_[index1] * t + vertex_j.values_[index1] * (1 - t);
+					auto index2 = (axisIndex + 2) % 3;
+					vertex.values_[index2] = vertex_i.values_[index2] * t + vertex_j.values_[index2] * (1 - t);
 
 					assert(inside(vertex));
 

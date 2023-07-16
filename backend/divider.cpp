@@ -14,7 +14,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	std::vector<uint32_t> sortedAabbIndices;
 
 	{ // sort aabbs
-		std::vector<std::tuple<float, float, uint32_t> > items;
+		std::vector<std::tuple<double, double, uint32_t> > items;
 
 		items.reserve(aabbs.size());
 
@@ -37,7 +37,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	// left: increase from minus
 	// right: decrease from plus
 
-	std::vector<float> leftHalfAreas, rightHalfAreas;
+	std::vector<double> leftHalfAreas, rightHalfAreas;
 
 	leftHalfAreas.reserve(aabbs.size());
 	rightHalfAreas.reserve(aabbs.size());
@@ -129,7 +129,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 		leftAmount_.push(2);
 
-		const float threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).center(axisIndex);
+		const auto threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).center(axisIndex);
 
 		for (int sideIndex = 0; sideIndex < 2; ++sideIndex)
 		{

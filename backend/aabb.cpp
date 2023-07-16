@@ -24,7 +24,7 @@ void AaBb::grow(const Vertex& vertex)
 	}
 }
 
-bool AaBb::shrinkIntoLeft(uint32_t axisIndex, float value)
+bool AaBb::shrinkIntoLeft(uint32_t axisIndex, double value)
 {
 	auto& maxi = maxi_[axisIndex];
 	if (value < maxi)
@@ -36,7 +36,7 @@ bool AaBb::shrinkIntoLeft(uint32_t axisIndex, float value)
 	return false;
 }
 
-bool AaBb::shrinkIntoRight(uint32_t axisIndex, float value)
+bool AaBb::shrinkIntoRight(uint32_t axisIndex, double value)
 {
 	auto& mini = mini_[axisIndex];
 	if (mini < value)
@@ -70,7 +70,7 @@ AaBb AaBb::halfRight(uint32_t axisIndex) const
 	return aabb;
 }
 
-float AaBb::halfArea() const
+double AaBb::halfArea() const
 {
 	auto ex = maxi_[0] - mini_[0];
 	auto ey = maxi_[1] - mini_[1];

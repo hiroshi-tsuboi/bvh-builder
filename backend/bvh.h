@@ -55,11 +55,11 @@ struct Bvh
 		std::mutex mutex_;
 		std::condition_variable notFull_;
 
-		float miniCosts_[3];
+		double miniCosts_[3];
 
 		uint32_t finishCount_ = 0;
 
-		void write(uint32_t index, float value);
+		void write(uint32_t index, double value);
 		void join(bool waitForAll = false);
 	};
 

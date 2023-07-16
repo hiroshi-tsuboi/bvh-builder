@@ -22,15 +22,15 @@ struct AaBb
 	void grow(const AaBb& aabb);
 	void grow(const Vertex& vertex);
 
-	bool shrinkIntoLeft(uint32_t axisIndex, float value);
-	bool shrinkIntoRight(uint32_t axisIndex, float value);
+	bool shrinkIntoLeft(uint32_t axisIndex, double value);
+	bool shrinkIntoRight(uint32_t axisIndex, double value);
 
 	// not copy vertices
 	AaBb halfLeft(uint32_t axisIndex) const;
 	AaBb halfRight(uint32_t axisIndex) const;
 
-	float halfArea() const;
-	float center(uint32_t axisIndex) const
+	double halfArea() const;
+	double center(uint32_t axisIndex) const
 	{
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}

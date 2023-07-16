@@ -73,7 +73,7 @@ void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<Aa
 	}
 }
 
-void Bvh::Result::write(uint32_t index, float value)
+void Bvh::Result::write(uint32_t index, double value)
 {
 	std::unique_lock<std::mutex> lk(mutex_);
 

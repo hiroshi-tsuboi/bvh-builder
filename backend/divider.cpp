@@ -101,8 +101,8 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
-	// finish sibling threads
-	std::this_thread::yield();
+	// wait for sibling threads
+	result.join(true);
 
 	// create node or leaf
 
@@ -198,17 +198,13 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 			fork(node, sideIndex, sharedChildAabbs, treeLevel);
 
-			std::this_thread::yield();
+			//std::this_thread::yield();
 		}
 	}
 	else
 	{
 		// debug code
 	}
-
-	// wait for threads
-
-	result.join(true);
 
 	leftAmount_.pop();
 }

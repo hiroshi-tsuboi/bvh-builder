@@ -101,6 +101,9 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
+	// finish sibling threads
+	std::this_thread::yield();
+
 	// create node or leaf
 
 	if (leftCount == 0)

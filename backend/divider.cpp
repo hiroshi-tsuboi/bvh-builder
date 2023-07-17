@@ -197,6 +197,8 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 			}
 
 			fork(node, sideIndex, sharedChildAabbs, treeLevel);
+
+			std::this_thread::yield();
 		}
 	}
 	else

@@ -14,14 +14,14 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 	std::vector<uint32_t> sortedAabbIndices;
 
 	{ // sort aabbs
-		std::vector<std::tuple<double, double, uint32_t> > items;
+		std::vector<std::tuple<double, double, double, uint32_t> > items;
 
 		items.reserve(aabbs.size());
 
 		for (uint32_t i = 0; i < aabbs.size(); ++i)
 		{
 			auto& aabb = aabbs.at(i);
-			items.push_back(std::make_tuple(aabb.center(axisIndex), aabb.halfArea(), i));
+			items.push_back(std::make_tuple(aabb.center(axisIndex), aabb.center((axisIndex + 1) % 3), aabb.center((axisIndex + 2) % 3), i));
 		}
 
 		std::sort(items.begin(), items.end());
@@ -30,7 +30,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 		for (auto& item: items)
 		{
-			sortedAabbIndices.push_back(std::get<2>(item));
+			sortedAabbIndices.push_back(std::get<3>(item));
 		}
 	}
 

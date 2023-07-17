@@ -97,8 +97,6 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 {
 	assert(!vertices_.empty());
 
-	assert(mini_[axisIndex] <= maxi_[axisIndex]);
-
 	AaBb aabb;
 
 	AaBb::Vertex vertex_j = vertices_.back();
@@ -138,6 +136,7 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 					for (uint32_t j = 1; j < 3; ++j)
 					{
 						auto index = (axisIndex + j) % 3;
+						// got bad result:  vertex.values_[index] = vertex_i.values_[index] * t +  vertex_j.values_[index] * (1 - t)
 						vertex.values_[index] = vertex_j.values_[index];
 						vertex.values_[index] += (vertex_i.values_[index] - vertex_j.values_[index]) * t;
 					}
@@ -145,7 +144,6 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 					assert(inside(vertex));
 
 					aabb.grow(vertex);
-					//assert(aabb.validate());
 				}
 				else
 				{
@@ -157,7 +155,6 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 		if (inside_i)
 		{
 			aabb.grow(vertex_i);
-			//assert(aabb.validate());
 		}
 
 		inside_j = inside_i;

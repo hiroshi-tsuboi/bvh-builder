@@ -6,7 +6,7 @@
 #include <cassert>
 #include <cmath>
 
-void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex, int treeLevel)
+void Bvh::divide(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, const uint32_t axisIndex, int treeLevel)
 {
 	const auto& aabbs = *sharedAabbs.get();
 	assert(1 < aabbs.size());
@@ -74,7 +74,7 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 		}
 	}
 
-	// wait for threads
+	// wait for sibling threads
 
 	auto& result = *sharedResult.get();
 
@@ -82,27 +82,33 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 	// select axisIndex to divide
 
+	bool waitForAll = true;
+
 	for (uint32_t i = 1; i < 3; ++i)
 	{
 		auto j = (axisIndex + i) % 3;
 		const auto cost = result.miniCosts_[j];
 		if (cost < miniCost)
 		{
-			result.join();
-			return;
+			waitForAll = false;
+			break;
 		}
 		if (cost == miniCost)
 		{
 			if (j < axisIndex)
 			{ // may make leaf on any axisIndex
-				result.join();
-				return;
+				waitForAll = false;
+				break;
 			}
 		}
 	}
 
-	// wait for sibling threads
-	result.join(true);
+	result.join(waitForAll);
+
+	if (!waitForAll)
+	{
+		return;
+	}
 
 	// create node or leaf
 
@@ -198,7 +204,10 @@ void Bvh::divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<
 
 			fork(node, sideIndex, sharedChildAabbs, treeLevel);
 
-			//std::this_thread::yield();
+			if (sideIndex == 0)
+			{
+				std::this_thread::yield();
+			}
 		}
 	}
 	else

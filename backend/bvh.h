@@ -90,9 +90,9 @@ struct Bvh
 		void join();
 	} log_;
 
-	void divide(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, uint32_t axisIndex, int treeLevel);
+	void divide(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, std::shared_ptr<Result> sharedResult, const uint32_t axisIndex, int treeLevel);
 
-	void fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int treeLevel);
+	void fork(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int treeLevel);
 
 	bool build(const Triangular& triangular, int extraTreeLevel = 1);
 

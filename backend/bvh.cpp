@@ -62,7 +62,7 @@ void Bvh::Leaf::create(const std::vector<AaBb>& aabbs)
 	}
 }
 
-void Bvh::fork(Bvh::Node* parent, int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int treeLevel)
+void Bvh::fork(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::vector<AaBb> > sharedAabbs, int treeLevel)
 {
 	auto sharedResult = std::make_shared<Result>();
 

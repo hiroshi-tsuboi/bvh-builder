@@ -213,6 +213,7 @@ void Bvh::divide(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::v
 	else
 	{
 		// debug code
+		log_.push(std::string("left triangles = ") + std::to_string(aabbs.size()));
 	}
 
 	leftAmount_.pop();

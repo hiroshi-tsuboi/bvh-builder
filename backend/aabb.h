@@ -30,7 +30,7 @@ struct AaBb
 	AaBb halfRight(uint32_t axisIndex) const;
 
 	double halfArea() const;
-	double center(uint32_t axisIndex) const
+	double origin(uint32_t axisIndex) const
 	{
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}

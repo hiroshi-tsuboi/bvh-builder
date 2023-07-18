@@ -54,7 +54,7 @@ AaBb AaBb::halfLeft(uint32_t axisIndex) const
        
 	aabb.grow(*this);
 
-	aabb.maxi_[axisIndex] = center(axisIndex);
+	aabb.maxi_[axisIndex] = origin(axisIndex);
 
 	return aabb;
 }
@@ -65,7 +65,7 @@ AaBb AaBb::halfRight(uint32_t axisIndex) const
        
 	aabb.grow(*this);
 
-	aabb.mini_[axisIndex] = center(axisIndex);
+	aabb.mini_[axisIndex] = origin(axisIndex);
 
 	return aabb;
 }

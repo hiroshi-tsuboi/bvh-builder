@@ -27,7 +27,7 @@ void AaBb::grow(const Vertex& vertex)
 
 void AaBb::fix()
 {
-	if (vertices_.empty())
+	if (empty())
 	{
 		return;
 	}

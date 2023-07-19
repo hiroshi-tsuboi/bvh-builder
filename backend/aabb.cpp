@@ -27,6 +27,10 @@ void AaBb::grow(const Vertex& vertex)
 
 void AaBb::fix()
 {
+	if (vertices_.empty())
+	{
+		return;
+	}
 	auto base = double(vertices_.size());
 	for (int i = 0; i < 3; ++i)
 	{
@@ -170,6 +174,8 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 		inside_j = inside_i;
 		vertex_j = vertex_i;
 	}
+
+	aabb.fix();
 
 	return aabb;
 }

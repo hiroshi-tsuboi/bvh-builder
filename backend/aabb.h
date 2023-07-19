@@ -19,8 +19,11 @@ struct AaBb
 
 	std::vector<Vertex> vertices_;
 
+	double center_[3] = {0, 0, 0};
+
 	void grow(const AaBb& aabb);
 	void grow(const Vertex& vertex);
+	void fix(); // finalize center_
 
 	bool shrinkIntoLeft(uint32_t axisIndex, double value);
 	bool shrinkIntoRight(uint32_t axisIndex, double value);

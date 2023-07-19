@@ -18,9 +18,19 @@ void AaBb::grow(const Vertex& vertex)
 	vertices_.push_back(vertex);
 	for (int i = 0; i < 3; ++i)
 	{
-		auto& value = vertex.values_[i];
+		auto value = vertex.values_[i];
 		mini_[i] = fmin(mini_[i], value);
 		maxi_[i] = fmax(maxi_[i], value);
+		center_[i] += value;
+	}
+}
+
+void AaBb::fix()
+{
+	auto base = double(vertices_.size());
+	for (int i = 0; i < 3; ++i)
+	{
+		center_[i] /= base;
 	}
 }
 

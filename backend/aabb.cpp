@@ -113,6 +113,8 @@ AaBb AaBb::optimize(const uint32_t axisIndex, const uint32_t sideIndex) const
 
 	AaBb aabb;
 
+	aabb.ownerIndex_ = ownerIndex_;
+
 	AaBb::Vertex vertex_j = vertices_.back();
 	auto inside_j = inside(vertex_j);
 

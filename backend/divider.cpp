@@ -21,7 +21,7 @@ void Bvh::divide(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::v
 		for (uint32_t i = 0; i < aabbs.size(); ++i)
 		{
 			auto& aabb = aabbs.at(i);
-			items.push_back(std::make_tuple(aabb.origin(axisIndex), aabb.origin((axisIndex + 1) % 3), aabb.origin((axisIndex + 2) % 3), i));
+			items.push_back(std::make_tuple(aabb.center_[axisIndex], aabb.center_[(axisIndex + 1) % 3], aabb.center_[(axisIndex + 2) % 3], i));
 		}
 
 		std::sort(items.begin(), items.end());
@@ -49,8 +49,8 @@ void Bvh::divide(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::v
 		auto leftIndex = sortedAabbIndices.at(i);
 		auto rightIndex = sortedAabbIndices.at(aabbs.size() - 1 - i);
 
-		leftAabb.grow(aabbs.at(leftIndex).halfLeft(axisIndex));
-		rightAabb.grow(aabbs.at(rightIndex).halfRight(axisIndex));
+		leftAabb.grow(aabbs.at(leftIndex).left(axisIndex));
+		rightAabb.grow(aabbs.at(rightIndex).right(axisIndex));
 		leftHalfAreas.push_back(leftAabb.halfArea());
 		rightHalfAreas.push_back(rightAabb.halfArea());
 	}
@@ -138,7 +138,7 @@ void Bvh::divide(Bvh::Node* parent, const int childIndex, std::shared_ptr<std::v
 
 		leftAmount_.push(2);
 
-		const auto threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).origin(axisIndex);
+		const auto threshold = aabbs.at(sortedAabbIndices.at(leftCount - 1)).center_[axisIndex];
 
 		for (int sideIndex = 0; sideIndex < 2; ++sideIndex)
 		{

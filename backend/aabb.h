@@ -29,15 +29,16 @@ struct AaBb
 	bool shrinkIntoRight(uint32_t axisIndex, double value);
 
 	// not copy vertices
-	AaBb halfLeft(uint32_t axisIndex) const;
-	AaBb halfRight(uint32_t axisIndex) const;
+	AaBb left(uint32_t axisIndex) const;
+	AaBb right(uint32_t axisIndex) const;
 
 	double halfArea() const;
+#if 0
 	double origin(uint32_t axisIndex) const
 	{
 		return (mini_[axisIndex] + maxi_[axisIndex]) * 0.5;
 	}
-
+#endif
 	bool inside(const Vertex& vertex) const;
 
 	AaBb optimize(const uint32_t axisIndex, const uint32_t sideIndex) const;

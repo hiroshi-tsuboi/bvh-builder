@@ -62,24 +62,24 @@ bool AaBb::shrinkIntoRight(uint32_t axisIndex, double value)
 	return false;
 }
 
-AaBb AaBb::halfLeft(uint32_t axisIndex) const
+AaBb AaBb::left(uint32_t axisIndex) const
 {
 	AaBb aabb;
        
 	aabb.grow(*this);
 
-	aabb.maxi_[axisIndex] = origin(axisIndex);
+	aabb.maxi_[axisIndex] = center_[axisIndex];
 
 	return aabb;
 }
 
-AaBb AaBb::halfRight(uint32_t axisIndex) const
+AaBb AaBb::right(uint32_t axisIndex) const
 {
 	AaBb aabb;
        
 	aabb.grow(*this);
 
-	aabb.mini_[axisIndex] = origin(axisIndex);
+	aabb.mini_[axisIndex] = center_[axisIndex];
 
 	return aabb;
 }

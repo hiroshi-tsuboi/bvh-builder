@@ -12,7 +12,7 @@ set(PROJECT_NAME "bvh-builder")
 
 project(${PROJECT_NAME})
 
-set(SOURCES main.cpp mesh.cpp aabb.cpp matrix3x3.cpp triangular.cpp divider.cpp bvh.cpp fifo.cpp tcp-server.cpp)
+set(SOURCES main.cpp mesh.cpp matrix3x3.cpp triangular.cpp polygonizer.cpp aabb.cpp divider.cpp bvh.cpp fifo.cpp tcp-server.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

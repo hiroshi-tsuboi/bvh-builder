@@ -2,15 +2,15 @@
 
 #include "triangular.h"
 
-struct Polygonizer
+struct Quadrangular
 {
-	struct Polygon
+	struct Quadrangle
 	{
-		std::vector<uint32_t> triangleIndices_;
-		std::vector<uint32_t> vertexIndies_;
+		uint32_t triangleIndices_[2];
+		uint32_t vertexIndices_[4];
 	};
 
-	std::vector<Polygon> polygons_;
+	std::vector<Quadrangle> quadrangles_;
 
 	bool create(const Triangular & triangular);
 };

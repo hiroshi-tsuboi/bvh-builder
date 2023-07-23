@@ -1,10 +1,10 @@
-#include "polygonizer.h"
+#include "quadrangular.h"
 
 #include <iostream>
 #include <map>
 #include <cmath>
 
-bool Polygonizer::create(const Triangular & triangular)
+bool Quadrangular::create(const Triangular & triangular)
 {
 	std::map<std::pair<uint32_t, uint32_t>, std::vector<std::pair<uint32_t, uint32_t> > > edgeLinks;
 	std::vector<std::tuple<double, double, double> > triangleNormals;
@@ -100,5 +100,5 @@ bool Polygonizer::create(const Triangular & triangular)
 
 	// TODO
 
-	return !polygons_.empty();
+	return !quadrangles_.empty();
 }

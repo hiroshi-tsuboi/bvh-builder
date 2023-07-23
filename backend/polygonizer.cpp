@@ -1,5 +1,6 @@
 #include "polygonizer.h"
 
+#include <iostream>
 #include <map>
 #include <cmath>
 
@@ -69,6 +70,33 @@ bool Polygonizer::create(const Triangular & triangular)
 			}
 		}
 	}
+
+	uint32_t count = 0;
+	const double threshold = cos(M_PI / 180);
+	for (const auto& [edge, triangleIndices]: edgeLinks)
+	{
+		if (triangleIndices.size() < 2)
+		{
+			continue;
+		}
+
+		if (2 < triangleIndices.size())
+		{
+			std::cout << "over link count = " << triangleIndices.size() << std::endl;
+		}
+
+		auto normal0 = triangleNormals.at(triangleIndices.at(0).first);
+		auto normal1 = triangleNormals.at(triangleIndices.at(1).first);
+
+		auto d = std::get<0>(normal0) * std::get<0>(normal1) + std::get<1>(normal0) * std::get<1>(normal1) + std::get<2>(normal0) * std::get<2>(normal1);
+
+		if (threshold < d)
+		{
+			++count;
+		}
+	}
+
+	std::cout << "merge count = " << count << std::endl;
 
 	// TODO
 

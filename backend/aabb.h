@@ -10,7 +10,7 @@ struct AaBb
 	double mini_[3] = {DBL_MAX, DBL_MAX, DBL_MAX};
 	double maxi_[3] = {-DBL_MAX, -DBL_MAX, -DBL_MAX};
 
-	int64_t ownerIndex_ = -1;
+	int64_t ownerIndices_[2] = {-1, -1};
 
 	struct Vertex
 	{

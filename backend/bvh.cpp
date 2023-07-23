@@ -58,7 +58,13 @@ void Bvh::Leaf::create(const std::vector<AaBb>& aabbs)
 
 	for (auto& aabb: aabbs)
 	{
-		triangleIndices_.push_back(aabb.ownerIndex_);
+		for (auto index: aabb.ownerIndices_)
+		{
+			if (0 <= index)
+			{
+				triangleIndices_.push_back(index);
+			}
+		}
 	}
 }
 
@@ -181,7 +187,7 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 			aabb.grow(vertex);
 		}
 
-		aabb.ownerIndex_ = triangleIndex;
+		aabb.ownerIndices_[0] = triangleIndex;
 		aabb.fix();
 	}
 

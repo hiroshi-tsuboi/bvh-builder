@@ -33,6 +33,7 @@ struct AaBb
 	AaBb right(uint32_t axisIndex) const;
 
 	double halfArea() const;
+	double volume() const;
 #if 0
 	double origin(uint32_t axisIndex) const
 	{

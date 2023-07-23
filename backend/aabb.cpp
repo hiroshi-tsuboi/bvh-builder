@@ -93,6 +93,15 @@ double AaBb::halfArea() const
 	return ex * ey + ey * ez + ez * ex;
 }
 
+double AaBb::volume() const
+{
+	auto ex = maxi_[0] - mini_[0];
+	auto ey = maxi_[1] - mini_[1];
+	auto ez = maxi_[2] - mini_[2];
+
+	return ex * ey * ez;
+}
+
 bool AaBb::inside(const Vertex& vertex) const
 {
 	for (int i = 0; i < 3; ++i)

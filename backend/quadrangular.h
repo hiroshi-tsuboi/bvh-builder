@@ -1,16 +1,14 @@
 #pragma once
 
+#include <set>
+
 #include "triangular.h"
+#include "aabb.h"
 
 struct Quadrangular
 {
-	struct Quadrangle
-	{
-		uint32_t triangleIndices_[2];
-		uint32_t vertexIndices_[4];
-	};
+	std::vector<AaBb> aabbs_;
+	std::set<uint32_t> triangleIndices_;
 
-	std::vector<Quadrangle> quadrangles_;
-
-	bool create(const Triangular & triangular);
+	void create(const Triangular & triangular);
 };

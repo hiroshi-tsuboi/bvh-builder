@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <map>
+#include <algorithm>
 #include <cmath>
+#include <cassert>
 
 void Quadrangular::create(const Triangular & triangular)
 {
@@ -69,6 +71,8 @@ void Quadrangular::create(const Triangular & triangular)
 				vertexIndices.push_back(triangle_j.indices_[(triangles.at(j).second + 2) % 3]);
 				vertexIndices.push_back(triangle_j.indices_[triangles.at(j).second]);
 
+				assert(triangle_j.indices_[triangles.at(j).second] == triangle_i.indices_[(triangles.at(i).second + 1) % 3]);
+
 				AaBb aabb;
 
 				aabb.ownerIndices_[0] = triangles.at(i).first;
@@ -94,5 +98,18 @@ void Quadrangular::create(const Triangular & triangular)
 		}
 	}
 
-	// TODO
+	std::sort(items.begin(), items.end());
+
+	for (auto& item: items)
+	{
+		auto& aabb = aabbs.at(std::get<2>(item));
+
+		if (triangleIndices_.count(aabb.ownerIndices_[0])) continue;
+		if (triangleIndices_.count(aabb.ownerIndices_[1])) continue;
+
+		aabbs_.push_back(aabb);
+
+		triangleIndices_.insert(aabb.ownerIndices_[0]);
+		triangleIndices_.insert(aabb.ownerIndices_[1]);
+	}
 }

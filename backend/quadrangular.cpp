@@ -64,19 +64,16 @@ void Quadrangular::create(const Triangular & triangular)
 
 				auto& triangle_j = triangular.triangles_.at(triangles.at(j).first);
 
-				std::vector<uint32_t> vertexIndices;
+				uint32_t vertexIndices[4];
 
-				vertexIndices.push_back(triangle_i.indices_[(triangles.at(i).second + 2) % 3]);
-				vertexIndices.push_back(triangle_i.indices_[triangles.at(i).second]);
-				vertexIndices.push_back(triangle_j.indices_[(triangles.at(j).second + 2) % 3]);
-				vertexIndices.push_back(triangle_j.indices_[triangles.at(j).second]);
+				vertexIndices[0] = triangle_i.indices_[(triangles.at(i).second + 2) % 3];
+				vertexIndices[1] = triangle_i.indices_[triangles.at(i).second];
+				vertexIndices[2] = triangle_j.indices_[(triangles.at(j).second + 2) % 3];
+				vertexIndices[3] = triangle_j.indices_[triangles.at(j).second];
 
 				assert(triangle_j.indices_[triangles.at(j).second] == triangle_i.indices_[(triangles.at(i).second + 1) % 3]);
 
 				AaBb aabb;
-
-				aabb.ownerIndices_[0] = triangles.at(i).first;
-				aabb.ownerIndices_[1] = triangles.at(j).first;
 
 				for (auto index: vertexIndices)
 				{
@@ -88,6 +85,45 @@ void Quadrangular::create(const Triangular & triangular)
 					}
 					aabb.grow(vertex);
 				}
+
+				{ // check for convex
+					AaBb::Vertex vertex_j;
+					double edges[4][3];
+
+					vertex_j = aabb.vertices_.front();
+					for (uint32_t i = 0; i < 4; ++i)
+					{
+						auto& vertex_i = aabb.vertices_.at((i + 1) % 4);
+						for (uint32_t k = 0; k < 3; ++k)
+						{
+							edges[i][k] = vertex_i.values_[k] - vertex_j.values_[k];
+						}
+						vertex_j = vertex_i;
+					}
+
+					double normals[2][3];
+
+					for (uint32_t normalIndex = 0; normalIndex < 2; ++normalIndex)
+					{
+						auto& normal = normals[normalIndex];
+						auto& e0 = edges[normalIndex * 2];
+						auto& e1 = edges[normalIndex * 2 + 1];
+						for (uint32_t i = 0; i < 3; ++i)
+						{
+							uint32_t j = (i + 1) % 3;
+							uint32_t k = (i + 2) % 3;
+							normal[i] = e0[j] * e1[k] - e0[k] * e1[j];
+						}
+					}
+
+					if ((normals[0][0] * normals[1][0] + normals[0][1] * normals[1][1] + normals[0][2] * normals[1][2]) <= 0)
+					{
+						continue;
+					}
+				}
+
+				aabb.ownerIndices_[0] = triangles.at(i).first;
+				aabb.ownerIndices_[1] = triangles.at(j).first;
 
 				auto aabbIndex = uint32_t(aabbs.size());
 

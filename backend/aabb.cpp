@@ -203,3 +203,25 @@ bool AaBb::validate() const
 
 	return !vertices_.empty();
 }
+
+void AaBb::divide(std::vector<AaBb>& aabbs)
+{
+	for (uint32_t triangleIndex = 0; triangleIndex < 2; ++triangleIndex)
+	{
+		AaBb aabb;
+
+		uint32_t vertexIndex = triangleIndex * 2;
+
+		for (uint32_t i = 0; i < 3; ++i)
+		{
+			aabb.grow(vertices_.at(vertexIndex % 4));
+			++vertexIndex;
+		}
+
+		aabb.ownerIndices_[0] = ownerIndices_[triangleIndex];
+
+		aabb.fix();
+
+		aabbs.push_back(aabb);
+	}	
+}

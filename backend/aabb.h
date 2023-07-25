@@ -50,4 +50,6 @@ struct AaBb
 	}
 
 	bool validate() const;
+
+	void divide(std::vector<AaBb>& aabbs);
 };

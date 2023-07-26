@@ -48,11 +48,6 @@ void Quadrangular::create(const Triangular & triangular)
 
 		for (uint32_t i = 0; i < triangles.size(); ++i)
 		{
-			if (triangleIndices_.count(triangles.at(i).first))
-			{
-				continue;
-			}
-
 			auto& triangle_i = triangular.triangles_.at(triangles.at(i).first);
 
 			for (uint32_t j = i + 1; j < triangles.size(); ++j)

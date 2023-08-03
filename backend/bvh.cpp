@@ -189,10 +189,7 @@ bool Bvh::build(const Triangular& triangular, int extraTreeLevel)
 
 		aabb.ownerIndices_[0] = triangleIndex;
 		aabb.fix();
-	}
 
-	for (auto& aabb: aabbs)
-	{
 		root_.aabb_.grow(aabb);
 	}
 

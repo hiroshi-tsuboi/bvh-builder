@@ -2,9 +2,12 @@
 
 void Linkage::create(const Triangular& triangular)
 {
+	triangles_.resize(triangular.triangles_.size());
+
 	for (uint32_t triangleIndex = 0; triangleIndex < triangular.triangles_.size(); ++triangleIndex)
 	{
 		auto& triangle = triangular.triangles_.at(triangleIndex);
+		auto& vertexIndices = triangles_.at(triangleIndex);
 
 		// link edge
 
@@ -12,6 +15,8 @@ void Linkage::create(const Triangular& triangular)
 		{
 			auto vi = triangle.indices_[edgeIndex];
 			auto vj = triangle.indices_[(edgeIndex + 1) % 3];
+
+			vertexIndices.at(edgeIndex) = vi;
 
 			if (vj < vi)
 			{

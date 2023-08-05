@@ -56,6 +56,25 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 				continue;		
 			}
 
+			for (uint32_t edgeIndex = 0; edgeIndex < 3; ++edgeIndex)
+			{
+				auto vi = triangle.indices_[edgeIndex];
+				auto vj = triangle.indices_[(edgeIndex + 1) % 3];
+
+				if (vj < vi)
+				{
+					auto tmp = vi;
+					vi = vj;
+					vj = tmp;
+				}
+
+				auto key = std::make_pair(vi, vj);
+
+				auto& edgeIndices = linkages_[key];
+
+				edgeIndices.push_back(std::make_pair(uint32_t(triangles_.size()), edgeIndex));
+			}
+
 			triangles_.push_back(triangle);
 		}
 		++polygonIndex;

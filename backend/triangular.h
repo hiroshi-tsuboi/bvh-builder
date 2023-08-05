@@ -21,4 +21,6 @@ struct Triangular
 	std::map<std::pair<uint32_t, uint32_t>, std::vector<std::pair<uint32_t, uint32_t> > > linkages_; // linkages[(vertexIndex0, vertexIndex1)] = (triangleIndex, edgeIndex)
 
 	bool create(std::vector<float>& vertices, uint32_t vertexOffset, uint32_t vertexStride, std::vector<std::vector<uint32_t> >& polygons);
+
+	std::vector<uint32_t> pack(std::vector<uint32_t>& triangleIndices);
 };

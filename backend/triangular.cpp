@@ -3,6 +3,7 @@
 
 #include <map>
 #include <tuple>
+#include <cassert>
 
 bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uint32_t vertexStride, std::vector<std::vector<uint32_t> >& polygons)
 {
@@ -90,5 +91,104 @@ bool Triangular::create(std::vector<float>& vertices, uint32_t vertexOffset, uin
 	}
 
 	return true;
+}
+
+
+std::vector<uint32_t> Triangular::pack(std::vector<uint32_t>& triangleIndices)
+{
+	std::vector<uint32_t> r;
+	std::map<uint32_t, uint32_t> localVertexIndices;
+	std::map<uint32_t, uint32_t> localVertexCounts;
+
+	for (auto triangleIndex: triangleIndices)
+	{
+		auto& triangle = triangles_.at(triangleIndex);
+
+		for (uint32_t i = 0; i < 3; ++i)
+		{
+			auto vertexIndex = triangle.indices_[i];
+			if (localVertexIndices.count(vertexIndex) == 0)
+			{
+				localVertexIndices.emplace(vertexIndex, localVertexIndices.size());
+				localVertexCounts.emplace(vertexIndex, 1);
+			}
+			else
+			{
+				localVertexCounts.at(vertexIndex) += 1;
+			}
+		}
+	}
+
+	if (5 < localVertexIndices.size())
+	{
+		return r; // failed to pack triangles
+	}
+
+	int pivotIndex = -1;
+
+	for (const auto& [vertex, count]: localVertexCounts)
+	{
+		if (count == triangleIndices.size())
+		{
+			pivotIndex = localVertexIndices.at(vertex);
+			break;
+		}
+	}
+
+	if (pivotIndex < 0)
+	{
+		return r; // failed to pack triangles
+	}
+
+	auto pivotOffset = localVertexIndices.size() - pivotIndex;
+
+	// pack triangle index
+
+	uint32_t triangleBitData = triangleIndices.size() - 1;
+	uint32_t triangleBitShift = 2;
+
+	for (auto triangleIndex: triangleIndices)
+	{
+		auto& triangle = triangles_.at(triangleIndex);
+
+		int startIndex = -1;
+		for (uint32_t i = 0; i < 3; ++i)
+		{
+			if (localVertexIndices.at(triangle.indices_[i]) == pivotIndex)
+			{
+				startIndex = i;
+				break;
+			}
+		}
+		assert(0 <= startIndex);
+
+		for (uint32_t i = 1; i < 3; ++i)
+		{
+			auto localVertexIndex = uint32_t((localVertexIndices.at(triangle.indices_[(i + startIndex) % 3]) + pivotOffset) % localVertexIndices.size());
+			assert(0 < localVertexIndex);
+			triangleBitData |= (localVertexIndex - 1) << triangleBitShift;
+			triangleBitShift += 2;
+		}
+	}
+
+	r.push_back(triangleBitData);
+
+	for (auto triangleIndex: triangleIndices)
+	{
+		r.push_back(triangleIndex);
+	}
+
+	{
+		auto offset = r.size();
+
+		r.resize(r.size() + localVertexIndices.size());
+
+		for (const auto& [vertex, index]: localVertexIndices)
+		{
+			r.at(offset + (index + pivotOffset) % localVertexIndices.size()) = vertex;
+		}
+	}
+
+	return r;
 }
 
